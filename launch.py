@@ -17,12 +17,10 @@ import sys, getopt, subprocess, re, pickle
 #  Re-add playlist
 #      mpc clear
 #      mpc add folder01
-#      mpc save list01
 #      mpc clear
 #      mpc add folder02
-#      mpc save list02
 #
-#  python launch.py -p folder01
+#  python launch.py -p folder01 -t 0
 #
 #  Oh no...
 #      mpc crossfade 1
@@ -52,29 +50,13 @@ def startPlaylistAtTime(playlist, currentTimeMs):
     aliasedTimeMs = getAliasedTime(currentTimeMs, totalPlaylistTimeMs)
     print 'aliased time', aliasedTimeMs
 
-    #
-    #  THIS WORKS BTW
-    #
-    # playlistIndex = 0
-    # songEndTimeMs = playlist[0][1]
-    # seekTimeMs = 0
-    # print 'index', playlistIndex, 'songEndTimeMs', songEndTimeMs, 'seekTimeMs', seekTimeMs
-    # while songEndTimeMs <= aliasedTimeMs:
-    #     seekTimeMs =  aliasedTimeMs - songEndTimeMs
-    #     playlistIndex += 1
-    #     songEndTimeMs += playlist[playlistIndex][1]
-    #     print 'index', playlistIndex, 'songEndTimeMs', songEndTimeMs, 'seekTimeMs', seekTimeMs
-    # this is correct currently but only because off by one error...
-    # print "playlist index", playlistIndex
-
-
     # If we are in the first song, just go there
     seekTimeMs =  aliasedTimeMs
 
     # Look at the end of the first song (INDEX ZERO, HERE) to see if we need to skip ahead
     songEndTimeMs = playlist[0][1]
 
-    # MPC Play list is indexed from 1, somewhat reasonably.  If we are in the first song, return 1
+    # MPC Playlists are indexed from 1, somewhat reasonably.  If we are in the first song, return 1
     playlistIndex = 1
 
     print 'index', playlistIndex, 'songEndTimeMs', songEndTimeMs, 'seekTimeMs', seekTimeMs
@@ -82,16 +64,17 @@ def startPlaylistAtTime(playlist, currentTimeMs):
     # Keep going until we find an end time that is PAST the aliased time.
     while songEndTimeMs <= aliasedTimeMs:
 
-        # If this is our last loop
-        seekTimeMs =  aliasedTimeMs - songEndTimeMs
+        # If this is our last loop, the seek time in target song is target time - end of last song
+        seekTimeMs = aliasedTimeMs - songEndTimeMs
 
+        # move us forward 1 song; for last loop, songEndTime will be after aliasedTime
         songEndTimeMs += playlist[playlistIndex][1]
 
+        # move us forward one song
         playlistIndex += 1
 
         print 'index', playlistIndex, 'songEndTimeMs', songEndTimeMs, 'seekTimeMs', seekTimeMs
 
-    # this is correct currently but only because off by one error...
     print "playlist index", playlistIndex
 
     seekTimeString = getSeekTimeString(seekTimeMs)
