@@ -110,7 +110,11 @@ Each folder created here is essentially a playlist.
 Add each playlist to MPC:
 ```
 mpc add folder01
+mpc save playlist01
+mpc clear
 mpc add folder02
+mpc save playlist02
+mpc clear
 ```
 
 Start playback (you should hear musical noises when you do this):
@@ -160,3 +164,38 @@ TIME=0; while true; do TIME=$(($TIME+5000)) && python launch.py -p folder02 -t $
 ```
 
 ![Magic!](https://media.giphy.com/media/12NUbkX6p4xOO4/giphy.gif)
+
+#### How to restart MPD (e.g. if it starts crashing...)
+
+```
+killall mpd
+rm ~/.mpd/database && touch ~/.mpd/database
+rm ~/.mpd/state
+mpd
+```
+
+#### Refresh the system after changing the files in the playlists
+```
+killall mpd
+rm ~/.mpd/database && touch ~/.mpd/database
+rm ~/.mpd/state
+mpd
+
+# Clear playlist cache
+rm ~/.mpd/hypnocache/*
+
+# Clear out current queue
+mpc clear
+
+# Remove playlists
+mpc rm playlist01
+mpc rm playlist02
+
+# Add folders back in and save to playlists
+mpc add folder01
+mpc save playlist01
+mpc clear
+mpc add folder02
+mpc save playlist02
+mpc clear
+```
