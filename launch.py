@@ -28,6 +28,18 @@ import sys, getopt, subprocess, re, pickle
 #      TIME=0; while true; do TIME=$(($TIME+5000)) && python launch.py -p folder02 -t $TIME; sleep 5; done
 #
 #  Oh yes.
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+#
+#  TODO:
+#    * Build global time tracker (timer.py) that calls launch.py
+#    * Build a way for infinitton buttons to communicate with global time tracker (timer.py)
+#    * Fix the way you reload playlists after changing the folders, too many steps
+#    * Build controls for other button functions (volume? stop? system restart? skip ahead?)
+#    * Make sure to turn on playlist repeat for mpc (`mpc repeat on`?)
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+#
 
 def launch(listName, currentTimeMs):
     print 'listName is', listName
