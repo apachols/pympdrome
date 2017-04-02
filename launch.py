@@ -17,19 +17,21 @@ import sys, getopt, subprocess, re, pickle
 #  Re-add playlist
 #      mpc clear
 #      mpc add folder01
+#      mpc save playlist01
 #      mpc clear
 #      mpc add folder02
+#      mpc save playlist02
 #
-#  python launch.py -p folder01 -t 0
+#  python launch.py -p playlist01 -t 0
 #
 #  Oh no...
 #      mpc crossfade 1
-#      TIME=90000; while true; do TIME=$(($TIME+5000)) && python launch.py -p folder01 -t $TIME; sleep 5; done
-#      TIME=0; while true; do TIME=$(($TIME+5000)) && python launch.py -p folder02 -t $TIME; sleep 5; done
+#      TIME=90000; while true; do TIME=$(($TIME+5000)) && python launch.py -p playlist01 -t $TIME; sleep 5; done
+#      TIME=0; while true; do TIME=$(($TIME+5000)) && python launch.py -p playlist02 -t $TIME; sleep 5; done
 #
 #  Oh yes.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #  TODO:
 #    * Build global time tracker (timer.py) that calls launch.py
@@ -38,7 +40,7 @@ import sys, getopt, subprocess, re, pickle
 #    * Build controls for other button functions (volume? stop? system restart? skip ahead?)
 #    * Make sure to turn on playlist repeat for mpc (`mpc repeat on`?)
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 
 def launch(listName, currentTimeMs):
@@ -163,8 +165,14 @@ def calculatePlaylistDurations(listName):
     return result
 
 def getFilesInPlaylist(listName):
-    commandOutput = subprocess.check_output(['mpc', 'ls', listName])
-    return commandOutput.strip().split('\n')
+    # mpc does not print a nice list of file paths for a playlist.
+    # the playlist file, however, is exactly that.
+    pathToPlaylistFiles = '/Users/adamp/.mpd/playlists/'
+
+    with open(pathToPlaylistFiles + listName + '.m3u') as f:
+        content = f.readlines()
+
+    return [line.strip() for line in content]
 
 def getFileDurationUsingFFProbe(fileUri):
     ffprobeOutput = subprocess.check_output(['ffprobe', fileUri], stderr=subprocess.STDOUT)
