@@ -1,4 +1,6 @@
-import sys, getopt, subprocess, re, pickle
+import sys, getopt, subprocess, re, pickle, time, os
+
+TIME_FILE_NAME = '/Users/adamp/.mpd/hypnotime'
 
 #
 #  Brew install mpd
@@ -22,34 +24,63 @@ import sys, getopt, subprocess, re, pickle
 #      mpc add folder02
 #      mpc save playlist02
 #
-#  python launch.py -p playlist01 -t 0
+#  python launch.py -p playlist01
 #
-#  Oh no...
 #      mpc crossfade 1
-#      TIME=90000; while true; do TIME=$(($TIME+5000)) && python launch.py -p playlist01 -t $TIME; sleep 5; done
-#      TIME=0; while true; do TIME=$(($TIME+5000)) && python launch.py -p playlist02 -t $TIME; sleep 5; done
-#
-#  Oh yes.
+#      while true; do python launch.py -p playlist01; sleep 8; done
+#      sleep 4; while true; do python launch.py -p playlist02; sleep 8; done
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #  TODO:
-#    * Build global time tracker (timer.py) that calls launch.py
-#    * Build a way for infinitton buttons to communicate with global time tracker (timer.py)
-#    * Fix the way you reload playlists after changing the folders, too many steps
+#    * Configs instead of hardcoded paths and such
+#    * Build a way for infinitton buttons to launch the playlists
 #    * Build controls for other button functions (volume? stop? system restart? skip ahead?)
 #    * Make sure to turn on playlist repeat for mpc (`mpc repeat on`?)
+#    * Fix the way you reload playlists after changing the folders, too many steps
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 
-def launch(listName, currentTimeMs):
+def launchPlaylist(listName):
+    currentPlaylistTimeMs = getCurrentPlaylistTimeMs()
+    launchPlaylistAtTime(listName, currentPlaylistTimeMs)
+
+def launchPlaylistAtTime(listName, currentPlaylistTimeMs):
     print 'listName is', listName
-    print 'time is', currentTimeMs
+    print 'time is', currentPlaylistTimeMs
 
     playlist = getPlaylist(listName)
 
-    startPlaylistAtTime(playlist, currentTimeMs)
+    startPlaylistAtTime(playlist, currentPlaylistTimeMs)
+
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+#
+
+def getCurrentPlaylistTimeMs():
+    systemStartTimeMs = readTimeFile()
+
+    # time() returns a floating point number in whole seconds since the epoch
+    intCurrentTimeMs = int(time.time() * 1000)
+
+    if (systemStartTimeMs is None):
+        writeTimeFile(intCurrentTimeMs)
+        return 0
+    else:
+        return intCurrentTimeMs - systemStartTimeMs
+
+def readTimeFile():
+    try:
+        with open(TIME_FILE_NAME, 'rb') as filehandle:
+            return pickle.load(filehandle)
+    except Exception as e:
+        return None
+
+def writeTimeFile(currentTimeMs):
+    with open(TIME_FILE_NAME, 'wb') as filehandle:
+        pickle.dump(currentTimeMs, filehandle)
+
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
@@ -70,7 +101,7 @@ def startPlaylistAtTime(playlist, currentTimeMs):
     # Look at the end of the first song (INDEX ZERO, HERE) to see if we need to skip ahead
     songEndTimeMs = playlist[0][1]
 
-    # MPC Playlists are indexed from 1, somewhat reasonably.  If we are in the first song, return 1
+    # MPC Playlists are indexed from 1, somewhat reasonably.  If we are in the first song we want index 1
     playlistIndex = 1
 
     print 'index', playlistIndex, 'songEndTimeMs', songEndTimeMs, 'seekTimeMs', seekTimeMs
@@ -78,7 +109,7 @@ def startPlaylistAtTime(playlist, currentTimeMs):
     # Keep going until we find an end time that is PAST the aliased time.
     while songEndTimeMs <= aliasedTimeMs:
 
-        # If this is our last loop, the seek time in target song is target time - end of last song
+        # If this is our last loop, the seek time in target song is target time minus end of last song
         seekTimeMs = aliasedTimeMs - songEndTimeMs
 
         # move us forward 1 song; for last loop, songEndTime will be after aliasedTime
@@ -199,15 +230,33 @@ def durationFromFFProbeDurationLine(line):
 class FFProbeError(RuntimeError):
     def __init__(self, msg):
         self.msg = msg
+
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+#
+
+# TODO, there's a lot we can do here to help the system reboot gracefully.
+def systemReset():
+    os.remove(TIME_FILE_NAME)
+
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
 def main(argv):
-    help = 'launch.py -p <playlist> -t <time>'
+    help = """
+        # switch to <playlist>
+        launch.py -p <playlist>
+        OR
+        # switch to <playlist> at the specified time
+        launch.py -p <playlist> -t <time>
+        OR
+        # reset the system
+        launch.py -r
+    """
     playlist = ''
     time = ''
     try:
-        opts, args = getopt.getopt(argv,"hp:t:",["playlist=","time="])
+        opts, args = getopt.getopt(argv,"hrp:t:",["playlist=","time="])
     except getopt.GetoptError:
         print help
         sys.exit(2)
@@ -215,12 +264,19 @@ def main(argv):
         if opt == '-h':
             print help
             sys.exit()
+        elif opt in ("-r"): #, "--reset"):
+            print 'SYSTEM RESET'
+            systemReset()
+            exit()
         elif opt in ("-p"): #, "--playlist"):
             playlist = arg
         elif opt in ("-t"): #, "--time"):
             time = arg
 
-    launch(playlist, time)
+    if (time == ''):
+        launchPlaylist(playlist)
+    else:
+        launchPlaylistAtTime(playlist, time)
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
