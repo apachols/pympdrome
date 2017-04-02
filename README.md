@@ -146,21 +146,21 @@ The 'playlist' arg will be one of the folders you added; 'time' will be global e
 
 ```
 # Play Steely Dan from the start
-python launch.py -p folder01 -t 0
+python launch.py -p playlist01 -t 0
 ```
 
 ```
 # Play Fleet Foxes starting at 90 seconds:
-python launch.py -p folder02 -t 90000
+python launch.py -p playlist02 -t 90000
 ```
 
 ```
 # Turn on cross fade, and then keep switching between the two playlists:
 mpc crossfade 1
 # In one terminal window:
-TIME=0; while true; do TIME=$(($TIME+5000)) && python launch.py -p folder01 -t $TIME; sleep 5; done
+TIME=0; sleep 4; while true; do TIME=$(($TIME+5000)) && python launch.py -p playlist01 -t $TIME; sleep 8; done
 # In another terminal window:
-TIME=0; while true; do TIME=$(($TIME+5000)) && python launch.py -p folder02 -t $TIME; sleep 5; done
+TIME=0; while true; do TIME=$(($TIME+5000)) && python launch.py -p playlist02 -t $TIME; sleep 8; done
 ```
 
 ![Magic!](https://media.giphy.com/media/12NUbkX6p4xOO4/giphy.gif)
