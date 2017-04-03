@@ -135,18 +135,38 @@ Create one more directory that we'll need to run pympdrome (this is where cached
 mkdir ~/.mpd/hypnocache/
 ```
 
+#### Get pympdrome command help
+```
+ $ python launch.py -h
+ 
+        # switch to <playlist>
+        launch.py -p <playlist>
+        OR
+        # switch to <playlist> at the specified time
+        launch.py -p <playlist> -t <time>
+        OR
+        # reset the system
+        launch.py -r
+```
+
+#### Start a playlist at the system time with pympdrome
+
+```
+ $ python launch.py -p <playlist>
+```
+The 'playlist' arg will be one of the folders you added; it will play at the global elapsed time since system start.
+
 #### Start a playlist at a time with pympdrome
 
 ```
- $ python launch.py -h
-launch.py -p <playlist> -t <time>
+ $ python launch.py -p <playlist> -t <time>
 ```
 
-The 'playlist' arg will be one of the folders you added; 'time' will be global elapsed time since system start in milliseconds.
+The 'playlist' arg will be one of the folders you added; 'time' will be playlist offset time in milliseconds.
 
 ```
-# Play Steely Dan from the start
-python launch.py -p playlist01 -t 0
+# Play Steely Dan at the global time:
+python launch.py -p playlist01
 ```
 
 ```
@@ -158,9 +178,9 @@ python launch.py -p playlist02 -t 90000
 # Turn on cross fade, and then keep switching between the two playlists:
 mpc crossfade 1
 # In one terminal window:
-TIME=0; sleep 4; while true; do TIME=$(($TIME+5000)) && python launch.py -p playlist01 -t $TIME; sleep 8; done
+while true; do python launch.py -p playlist01; sleep 8; done
 # In another terminal window:
-TIME=0; while true; do TIME=$(($TIME+5000)) && python launch.py -p playlist02 -t $TIME; sleep 8; done
+sleep 4; while true; do python launch.py -p playlist02; sleep 8; done
 ```
 
 ![Magic!](https://media.giphy.com/media/12NUbkX6p4xOO4/giphy.gif)
@@ -172,6 +192,11 @@ killall mpd
 rm ~/.mpd/database && touch ~/.mpd/database
 rm ~/.mpd/state
 mpd
+```
+
+#### System restart for pympdrome
+```
+ $ python launch.py -r
 ```
 
 #### Refresh the system after changing the files in the playlists
