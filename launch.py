@@ -34,6 +34,7 @@ TIME_FILE_NAME = '/Users/adamp/.mpd/hypnotime'
 #
 #  TODO:
 #    * Configs instead of hardcoded paths and such
+#    * Debug prints
 #    * Build a way for infinitton buttons to launch the playlists
 #    * Build controls for other button functions (volume? stop? system restart? skip ahead?)
 #    * Make sure to turn on playlist repeat for mpc (`mpc repeat on`?)
@@ -52,7 +53,7 @@ def launchPlaylistAtTime(listName, currentPlaylistTimeMs):
 
     playlist = getPlaylist(listName)
 
-    startPlaylistAtTime(playlist, currentPlaylistTimeMs)
+    startPlaylistAtTime(listName, playlist, currentPlaylistTimeMs)
 
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -85,53 +86,43 @@ def writeTimeFile(currentTimeMs):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
 
-def startPlaylistAtTime(playlist, currentTimeMs):
-    for song in playlist:
-        print song
-
-    totalPlaylistTimeMs = sum( int(duration) for filename,duration in playlist )
+def startPlaylistAtTime(listName, playlistData, currentTimeMs):
+    totalPlaylistTimeMs = sum( int(duration) for filename,duration in playlistData )
     print 'total duration in ms:', totalPlaylistTimeMs
 
     aliasedTimeMs = getAliasedTime(currentTimeMs, totalPlaylistTimeMs)
     print 'aliased time', aliasedTimeMs
 
-    # If we are in the first song, just go there
-    seekTimeMs =  aliasedTimeMs
+    endOfPreviousSongMarker = 0
+    for playlistDataIndex, song in enumerate(playlistData):
+        # seek time is how far we have to go from the end of the previous song to the target time
+        seekTime = aliasedTimeMs - endOfPreviousSongMarker
 
-    # Look at the end of the first song (INDEX ZERO, HERE) to see if we need to skip ahead
-    songEndTimeMs = playlist[0][1]
+        # pull the current song length and advance the end-of-song marker by one song
+        currentSongLength = song[1]
+        endOfPreviousSongMarker += currentSongLength
 
-    # MPC Playlists are indexed from 1, somewhat reasonably.  If we are in the first song we want index 1
-    playlistIndex = 1
+        printPlaylistSeekSanityCheck(playlistDataIndex, currentSongLength, seekTime, endOfPreviousSongMarker)
 
-    print 'index', playlistIndex, 'songEndTimeMs', songEndTimeMs, 'seekTimeMs', seekTimeMs
+        # if we need to seek to a time in the middle of this song, we've found our song, quit looking.
+        if (seekTime < currentSongLength):
+            break
 
-    # Keep going until we find an end time that is PAST the aliased time.
-    while songEndTimeMs <= aliasedTimeMs:
+    # MPC Playlists are indexed from 1, somewhat reasonably.
+    playAtIndexWithSeekTime(listName, playlistDataIndex + 1, getSeekTimeString(seekTime))
 
-        # If this is our last loop, the seek time in target song is target time minus end of last song
-        seekTimeMs = aliasedTimeMs - songEndTimeMs
-
-        # move us forward 1 song; for last loop, songEndTime will be after aliasedTime
-        songEndTimeMs += playlist[playlistIndex][1]
-
-        # move us forward one song
-        playlistIndex += 1
-
-        print 'index', playlistIndex, 'songEndTimeMs', songEndTimeMs, 'seekTimeMs', seekTimeMs
-
-    print "playlist index", playlistIndex
-
-    seekTimeString = getSeekTimeString(seekTimeMs)
-
-    playAtIndexWithSeekTime(playlistIndex, seekTimeString)
+def printPlaylistSeekSanityCheck(idx, songLength, seekTime, endOfSong):
+    # MPC Playlists are indexed from 1, somewhat reasonably.
+    playlistIndex = idx + 1
+    print '('+str(playlistIndex)+')', 'songLength', songLength, 'seekTime', seekTime, 'endOfSong', endOfSong
 
 def getSeekTimeString(seekTimeInMs):
     seekTimeRoundedSeconds = int(seekTimeInMs/1000)
-    # print "seek time in seconds", seekTimeRoundedSeconds
     return '+00:00:' + str(seekTimeRoundedSeconds)
 
-def playAtIndexWithSeekTime(index, seekTime):
+def playAtIndexWithSeekTime(listName, index, seekTime):
+    subprocess.check_output(['mpc', 'clear'])
+    subprocess.check_output(['mpc', 'load', listName])
     subprocess.check_output(['mpc', 'play', str(index)])
     subprocess.check_output(['mpc', 'pause'])
     subprocess.check_output(['mpc', 'seek', seekTime])
@@ -144,11 +135,7 @@ def getAliasedTime(currentTimeMs, playlistLengthMs):
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
-# For later:  we need to be able to invalidate this cache :|
-# Maybe we can have a restart command that wipes them all?
-# But we need a python daemon or something that will keep track of the time...
-# or to store the start time in a file
-#
+
 def getPlaylist(listName):
     resultList = readFromCache(listName)
 
@@ -234,8 +221,9 @@ class FFProbeError(RuntimeError):
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
-
-# TODO, there's a lot we can do here to help the system reboot gracefully.
+# TODO, there's a lot we can do here to help the system reboot gracefully:
+#       - clear 'hypnocache' files
+#
 def systemReset():
     os.remove(TIME_FILE_NAME)
 
