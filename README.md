@@ -119,6 +119,7 @@ mpc clear
 
 Start playback (you should hear musical noises when you do this):
 ```
+mpc load playlist01
 mpc play
 ```
 
