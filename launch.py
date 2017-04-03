@@ -33,10 +33,12 @@ TIME_FILE_NAME = '/Users/adamp/.mpd/hypnotime'
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #  TODO:
+#    * When using -t <time> to start the system, write the system time file again
 #    * Configs instead of hardcoded paths and such
-#    * Debug prints
+#    * Verbose mode
+#    * Split into a couple of different files
 #    * Build a way for infinitton buttons to launch the playlists
-#    * Build controls for other button functions (volume? stop? system restart? skip ahead?)
+#    * Build controls for other button functions (volume? stop? skip ahead?)
 #    * Make sure to turn on playlist repeat for mpc (`mpc repeat on`?)
 #    * Fix the way you reload playlists after changing the folders, too many steps
 #
@@ -102,6 +104,7 @@ def startPlaylistAtTime(listName, playlistData, currentTimeMs):
         currentSongLength = song[1]
         endOfPreviousSongMarker += currentSongLength
 
+        # debug print a sanity check for this loop
         printPlaylistSeekSanityCheck(playlistDataIndex, currentSongLength, seekTime, endOfPreviousSongMarker)
 
         # if we need to seek to a time in the middle of this song, we've found our song, quit looking.
@@ -112,9 +115,7 @@ def startPlaylistAtTime(listName, playlistData, currentTimeMs):
     playAtIndexWithSeekTime(listName, playlistDataIndex + 1, getSeekTimeString(seekTime))
 
 def printPlaylistSeekSanityCheck(idx, songLength, seekTime, endOfSong):
-    # MPC Playlists are indexed from 1, somewhat reasonably.
-    playlistIndex = idx + 1
-    print '('+str(playlistIndex)+')', 'songLength', songLength, 'seekTime', seekTime, 'endOfSong', endOfSong
+    print '('+str(idx)+')', 'songLength', songLength, 'seekTime', seekTime, 'endOfSong', endOfSong
 
 def getSeekTimeString(seekTimeInMs):
     seekTimeRoundedSeconds = int(seekTimeInMs/1000)
