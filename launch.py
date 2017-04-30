@@ -1,6 +1,9 @@
 import sys, getopt, subprocess, re, pickle, time, os
 
 TIME_FILE_NAME = '/Users/adamp/.mpd/hypnotime'
+PATH_TO_MUSIC_DB_FILES = '/Users/adamp/Music/MPD/'
+CACHE_FILE_PATH = '/Users/adamp/.mpd/hypnocache/'
+PATH_TO_PLAYLIST_FILES = '/Users/adamp/.mpd/playlists/'
 
 #
 #  Brew install mpd
@@ -13,6 +16,8 @@ TIME_FILE_NAME = '/Users/adamp/.mpd/hypnotime'
 #      rm ~/.mpd/state
 #      mpd
 #
+#  python launch.py -r # SYSTEM RESTART
+#
 #  Clear playlist cache
 #      rm ~/.mpd/hypnocache/*
 #
@@ -23,6 +28,9 @@ TIME_FILE_NAME = '/Users/adamp/.mpd/hypnotime'
 #      mpc clear
 #      mpc add folder02
 #      mpc save playlist02
+#      mpc clear
+#      mpc add folder03
+#      mpc save playlist03
 #
 #  python launch.py -p playlist01
 #
@@ -151,7 +159,7 @@ def getPlaylist(listName):
     return resultList
 
 def cacheFileName(listName):
-    return '/Users/adamp/.mpd/hypnocache/' + listName
+    return CACHE_FILE_PATH + listName
 
 def readFromCache(listName):
     try:
@@ -165,14 +173,12 @@ def writeToCache(listName, resultList):
         pickle.dump(resultList, filehandle)
 
 def calculatePlaylistDurations(listName):
-    pathToFiles = '/Users/adamp/Music/MPD/'
-
     files = getFilesInPlaylist(listName)
 
     result = []
 
     for aFile in files:
-        fileUri = pathToFiles + aFile
+        fileUri = PATH_TO_MUSIC_DB_FILES + aFile
         try:
             duration = getFileDurationUsingFFProbe(fileUri)
             row = (fileUri, duration)
@@ -186,9 +192,8 @@ def calculatePlaylistDurations(listName):
 def getFilesInPlaylist(listName):
     # mpc does not print a nice list of file paths for a playlist.
     # the playlist file, however, is exactly that.
-    pathToPlaylistFiles = '/Users/adamp/.mpd/playlists/'
 
-    with open(pathToPlaylistFiles + listName + '.m3u') as f:
+    with open(PATH_TO_PLAYLIST_FILES + listName + '.m3u') as f:
         content = f.readlines()
 
     return [line.strip() for line in content]
