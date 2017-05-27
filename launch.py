@@ -1,4 +1,4 @@
-import sys, getopt, subprocess, re, pickle, time, os
+import sys, getopt
 
 from lib import radio, system
 
@@ -58,13 +58,16 @@ def main(argv):
         # switch to <playlist> at the specified time
         launch.py -p <playlist> -t <time>
         OR
+        # skip to next song
+        launch.py -n
+        OR
         # reset the system
         launch.py -r
     """
     playlist = ''
     time = ''
     try:
-        opts, args = getopt.getopt(argv,"hrp:t:",["playlist=","time="])
+        opts, args = getopt.getopt(argv,"hrnp:t:",["playlist=","time="])
     except getopt.GetoptError:
         print help
         sys.exit(2)
@@ -72,6 +75,10 @@ def main(argv):
         if opt == '-h':
             print help
             sys.exit()
+        elif opt in ("-n"): #, "--next"):
+            print 'Next!'
+            radio.skipToNextSong()
+            exit()
         elif opt in ("-r"): #, "--reset"):
             print 'SYSTEM RESET'
             system.reset()
@@ -80,6 +87,10 @@ def main(argv):
             playlist = arg
         elif opt in ("-t"): #, "--time"):
             time = arg
+
+    if (playlist == ''):
+        print 'Input Error: no playlist specified'
+        exit(1)
 
     if (time == ''):
         radio.launchPlaylist(playlist)

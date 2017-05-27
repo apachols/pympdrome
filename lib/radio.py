@@ -1,21 +1,37 @@
-import sys, getopt, subprocess, re, pickle, time, os
+import subprocess, time
 
 from lib import ffprobe, system, cache
+
+DEBUG_PRINTS=False
 
 PATH_TO_MUSIC_DB_FILES = '/Users/adamp/Music/MPD/'
 PATH_TO_PLAYLIST_FILES = '/Users/adamp/.mpd/playlists/'
 
+def skipToNextSong():
+    # Figure out what we are playing currently
+    currentSystemTimeMs = system.getCurrentSystemTimeMs()
+    currentPlaylistName = system.getCurrentPlaylistName()
+    playlistData = getPlaylist(currentPlaylistName)
+    # Find the start of the next song, and reset the system time so it plays immediately
+    nextSongStartTimeMs = getAliasedTimeForStartOfNextSong(currentPlaylistName, playlistData, currentSystemTimeMs)
+    newSystemTimeMs = system.newSystemTimeForAliasedStartTime(nextSongStartTimeMs)
+    system.setCurrentSystemTimeMs(newSystemTimeMs)
+    # Now that ths system time says the next song is up, launch current playlist
+    launchPlaylist(currentPlaylistName)
+
 def launchPlaylist(listName):
     currentSystemTimeMs = system.getCurrentSystemTimeMs()
     launchPlaylistAtTime(listName, currentSystemTimeMs)
+    system.setCurrentPlaylistName(listName)
 
 def launchPlaylistAtTime(listName, currentSystemTimeMs):
-    print 'listName is', listName
-    print 'time is', currentSystemTimeMs
+    if (DEBUG_PRINTS):
+        print 'playing playlist named', listName
+        print 'playing at time', currentSystemTimeMs
 
     playlist = getPlaylist(listName)
-
     startPlaylistAtTime(listName, playlist, currentSystemTimeMs)
+    system.setCurrentPlaylistName(listName)
 
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -31,16 +47,28 @@ def launchPlaylistAtTime(listName, currentSystemTimeMs):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
 
-# Get the number of seconds we are in the current playthrough (aliased time)
-# Step through the songs until we find the song we're in the middle of
+# Start the requested playlist at the target time
+def startPlaylistAtTime(listName, playlistData, targetPlaylistTimeMs):
+    indexAndSeekTime = getPlaylistIndexAndSeekTime(listName, playlistData, targetPlaylistTimeMs)
+    playlistDataIndex = indexAndSeekTime[0]
+    seekTime = indexAndSeekTime[1]
+    playAtIndexWithSeekTime(listName, playlistDataIndex + 1, seekTime)
+
 # Clear out MPC's playlist, load the correct playlist, load the correct song,
 #   seek to the correct time, and play
-def startPlaylistAtTime(listName, playlistData, currentTimeMs):
-    totalPlaylistTimeMs = sum( int(duration) for filename,duration in playlistData )
-    print 'total duration in ms:', totalPlaylistTimeMs
+def playAtIndexWithSeekTime(listName, index, seekTime):
+    subprocess.check_output(['mpc', 'clear'])
+    subprocess.check_output(['mpc', 'load', listName])
+    subprocess.check_output(['mpc', 'play', str(index)])
+    subprocess.check_output(['mpc', 'pause'])
+    subprocess.check_output(['mpc', 'seek', seekTime])
+    subprocess.check_output(['mpc', 'play'])
 
-    aliasedTimeMs = getAliasedTime(currentTimeMs, totalPlaylistTimeMs)
-    print 'aliased time', aliasedTimeMs
+# Get the number of seconds we are in the current playthrough (aliased time)
+# Step through the songs until we find the song we're in the middle of
+# Return the zero-offset index of that song and the number of milliseconds we are through it
+def getPlaylistIndexAndSeekTime(listName, playlistData, targetPlaylistTimeMs):
+    aliasedTimeMs = getAliasedTimeForPlaylistData(playlistData, targetPlaylistTimeMs)
 
     endOfPreviousSongMarker = 0
     for playlistDataIndex, song in enumerate(playlistData):
@@ -58,26 +86,36 @@ def startPlaylistAtTime(listName, playlistData, currentTimeMs):
         if (seekTime < currentSongLength):
             break
 
-    # MPC Playlists are indexed from 1, somewhat reasonably.
-    playAtIndexWithSeekTime(listName, playlistDataIndex + 1, getSeekTimeString(seekTime))
+    return (playlistDataIndex, getSeekTimeString(seekTime))
+
+# Loop through playlist data, return aliased start time of next song
+def getAliasedTimeForStartOfNextSong(listName, playlistData, currentSystemTimeMs):
+    aliasedTimeMs = getAliasedTimeForPlaylistData(playlistData, currentSystemTimeMs)
+    playlistDataIndex = 0
+    startOfNextSongMarker = 0
+    for playlistDataIndex, song in enumerate(playlistData):
+        playlistDataIndex += 1
+        currentSongLength = song[1]
+        startOfNextSongMarker += currentSongLength
+        # if the start of next song is after the aliased time, stop searching, we found it
+        if (aliasedTimeMs < startOfNextSongMarker):
+            break
+    return startOfNextSongMarker
 
 def printPlaylistSeekSanityCheck(idx, songLength, seekTime, endOfSong):
-    print '('+str(idx)+')', 'songLength', songLength, 'seekTime', seekTime, 'endOfSong', endOfSong
+    if (DEBUG_PRINTS):
+        print '('+str(idx)+')', 'songLength', songLength, 'seekTime', seekTime, 'endOfSong', endOfSong
 
 def getSeekTimeString(seekTimeInMs):
     seekTimeRoundedSeconds = int(seekTimeInMs/1000)
     return '+00:00:' + str(seekTimeRoundedSeconds)
 
-def playAtIndexWithSeekTime(listName, index, seekTime):
-    subprocess.check_output(['mpc', 'clear'])
-    subprocess.check_output(['mpc', 'load', listName])
-    subprocess.check_output(['mpc', 'play', str(index)])
-    subprocess.check_output(['mpc', 'pause'])
-    subprocess.check_output(['mpc', 'seek', seekTime])
-    subprocess.check_output(['mpc', 'play'])
+def getAliasedTimeForPlaylistData(playlistData, targetPlaylistTimeMs):
+    totalPlaylistTimeMs = sum( int(duration) for filename,duration in playlistData )
+    return getAliasedTime(targetPlaylistTimeMs, totalPlaylistTimeMs)
 
-def getAliasedTime(currentTimeMs, playlistLengthMs):
-    aliasedTime = int(currentTimeMs) % int(playlistLengthMs)
+def getAliasedTime(targetPlaylistTimeMs, playlistLengthMs):
+    aliasedTime = int(targetPlaylistTimeMs) % int(playlistLengthMs)
     return aliasedTime
 
 #
@@ -95,13 +133,15 @@ def getPlaylist(listName):
     resultList = cache.readFrom(listName)
 
     if not resultList is None:
-        print '========> From Cache'
         return resultList
 
+    print '========> Recalculating playlist durations using ffprobe, please wait...'
+    t1 = time.time()
     resultList = calculatePlaylistDurations(listName)
     cache.writeTo(listName, resultList)
+    t2 = time.time()
+    print '========> Playlist recalculations complete (in', t2-t1, 'ms)'
 
-    print '========> Calculated Fresh'
     return resultList
 
 # Use ffprobe to calculate playlist durations
