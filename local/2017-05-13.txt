@@ -1,53 +1,12 @@
-killall mpd
- 
-rm ~/.mpd/database && touch ~/.mpd/database
- 
-rm ~/.mpd/state
+# SYSTEM RESTART
+python launch.py -r 
 
-mpd
-
-python launch.py -r # SYSTEM RESTART
-
-rm ~/.mpd/hypnocache/*
-
-mpc rm french.exit
-mpc clear
-mpc add french.exit
-mpc save french.exit
-
-mpc rm you.just.found.five.dollars
-mpc clear
-mpc add you.just.found.five.dollars
-mpc save you.just.found.five.dollars
-
-mpc rm too.chill.a.mockingbird
-mpc clear
-mpc add too.chill.a.mockingbird
-mpc save too.chill.a.mockingbird
-
-mpc rm this.is.rap
-mpc clear
-mpc add this.is.rap
-mpc save this.is.rap
-
-mpc rm more.noise.please
-mpc clear
-mpc add more.noise.please
-mpc save more.noise.please
-
-mpc rm eyeballs
-mpc clear
-mpc add eyeballs
-mpc save eyeballs
-
-mpc rm medium
-mpc clear
-mpc add medium
-mpc save medium
-
-mpc rm spin.that.record
-mpc clear
-mpc add spin.that.record
-mpc save spin.that.record
-
-
+# RELOAD PLAYLISTS
+python launch.py -l -p french.exit ; 
+python launch.py -l -p you.just.found.five.dollars ; 
+python launch.py -l -p too.chill.a.mockingbird ; 
+python launch.py -l -p this.is.rap ; 
+python launch.py -l -p more.noise.please ; 
+python launch.py -l -p eyeballs ; 
+python launch.py -l -p medium ; 
+python launch.py -l -p spin.that.record ; 
