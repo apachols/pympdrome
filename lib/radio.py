@@ -2,28 +2,49 @@ import subprocess, time
 
 from lib import ffprobe, system, cache
 
-DEBUG_PRINTS=False
+DEBUG_PRINTS = False
 
 PATH_TO_MUSIC_DB_FILES = '/Users/adamp/Music/MPD/'
 PATH_TO_PLAYLIST_FILES = '/Users/adamp/.mpd/playlists/'
 
-def skipToNextSong():
-    # Figure out what we are playing currently
-    currentSystemTimeMs = system.getCurrentSystemTimeMs()
-    currentPlaylistName = system.getCurrentPlaylistName()
-    playlistData = getPlaylist(currentPlaylistName)
-    # Find the start of the next song, and reset the system time so it plays immediately
-    nextSongStartTimeMs = getAliasedTimeForStartOfNextSong(currentPlaylistName, playlistData, currentSystemTimeMs)
-    newSystemTimeMs = system.newSystemTimeForAliasedStartTime(nextSongStartTimeMs)
-    system.setCurrentSystemTimeMs(newSystemTimeMs)
-    # Now that ths system time says the next song is up, launch current playlist
-    launchPlaylist(currentPlaylistName)
+#
+##
+####
+# R A D I O H Y P N O D R O M E
+#  - smartHandleButtonPress(playlistName) switch to playList OR skip to next song if playing
+#  - skipToNextSong() skip to the next song in current playlist (PLUS TIME TRAVEL)
+#  - launchPlaylist(listName) switch to listName and play at current system time
+#  - launchPlaylistAtTime(listName, currentSystemTimeMs) play listName a the specified time
+####
+##
+#
 
+def smartHandleButtonPress(playlistName):
+    currentPlaylistName = system.getCurrentPlaylistName()
+    if (playlistName == currentPlaylistName):
+        skipToNextSong()
+    else:
+        launchPlaylist(playlistName)
+
+# skips to the next song in current playlist
+# NOTE: also sets system time ahead so we won't repeat songs if a lot of skipping happens
+# "Where's the device that let's you speed or slow the passage of time?"
+def skipToNextSong():
+    # Find the start of the next song in the current playlist
+    currentPlaylistName = system.getCurrentPlaylistName()
+    nextSongStartTimeMs = getAliasedTimeForStartOfNextSong(
+        currentPlaylistName,
+        getPlaylist(currentPlaylistName),
+        system.getCurrentSystemTimeMs()
+    )
+    launchPlaylistAtNewSystemTime(currentPlaylistName, nextSongStartTimeMs)
+
+# launches a playlist at the current system time
 def launchPlaylist(listName):
     currentSystemTimeMs = system.getCurrentSystemTimeMs()
     launchPlaylistAtTime(listName, currentSystemTimeMs)
-    system.setCurrentPlaylistName(listName)
 
+# launches a playlist at the specified time
 def launchPlaylistAtTime(listName, currentSystemTimeMs):
     if (DEBUG_PRINTS):
         print 'playing playlist named', listName
@@ -32,6 +53,26 @@ def launchPlaylistAtTime(listName, currentSystemTimeMs):
     playlist = getPlaylist(listName)
     startPlaylistAtTime(listName, playlist, currentSystemTimeMs)
     system.setCurrentPlaylistName(listName)
+
+# launch a playlist at the target time and force all other stations to that time
+def launchPlaylistAtNewSystemTime(listName, newSystemTimeMs):
+    # Reset the system time to the target time
+    system.setAliasedSystemTimeMs(newSystemTimeMs)
+    launchPlaylist(listName)
+
+def loadPlaylistIntoMPC(listName, shuffle):
+    # well well well, finally actually checking_output, are we?
+    mpcPlaylists = subprocess.check_output(['mpc', 'lsplaylist'])
+    if (listName in mpcPlaylists):
+        subprocess.check_output(['mpc', 'rm', listName])
+    subprocess.check_output(['mpc', 'clear'])
+    subprocess.check_output(['mpc', 'add', listName])
+    if (shuffle):
+        subprocess.check_output(['mpc', 'shuffle'])
+    subprocess.check_output(['mpc', 'save', listName])
+
+def stopPlayback():
+    subprocess.check_output(['mpc', 'stop'])
 
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
