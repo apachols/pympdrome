@@ -16,10 +16,25 @@ def launchPlaylistAtTime(listName, currentSystemTimeMs):
     playlist = getPlaylist(listName)
 
     startPlaylistAtTime(listName, playlist, currentSystemTimeMs)
+
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# Start a playlist at a given time.  If given time is after end of playlist,
+# loop around to the start.
+#
+# For example:
+# - If playlist is 99000 ms, and time is 41000, playlist starts at 41000ms
+# - If playlist is 99000 ms, and time is 150200, playlist starts at 51200ms (wrapped once)
+# - If playlist is 99000 ms, and time is 250300, playlist starts at 52300ms (wrapped twice)
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
 
+# Get the number of seconds we are in the current playthrough (aliased time)
+# Step through the songs until we find the song we're in the middle of
+# Clear out MPC's playlist, load the correct playlist, load the correct song,
+#   seek to the correct time, and play
 def startPlaylistAtTime(listName, playlistData, currentTimeMs):
     totalPlaylistTimeMs = sum( int(duration) for filename,duration in playlistData )
     print 'total duration in ms:', totalPlaylistTimeMs
@@ -66,9 +81,16 @@ def getAliasedTime(currentTimeMs, playlistLengthMs):
     return aliasedTime
 
 #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# Calculate durations of songs in playlist and cache them on disk
+#
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
 
+# Look in the cache for playlist durations
+# If not in cache, calculate playlist durations and write cache
+# Return durations for songs in playlist as array
 def getPlaylist(listName):
     resultList = cache.readFrom(listName)
 
@@ -82,6 +104,8 @@ def getPlaylist(listName):
     print '========> Calculated Fresh'
     return resultList
 
+# Use ffprobe to calculate playlist durations
+# Return playlist durations as array
 def calculatePlaylistDurations(listName):
     files = getFilesInPlaylist(listName)
 
@@ -99,10 +123,9 @@ def calculatePlaylistDurations(listName):
 
     return result
 
+# Read an m3u file from the MPC playlist directory
+# Return all the files in the m3u playlist file as array
 def getFilesInPlaylist(listName):
-    # mpc does not print a nice list of file paths for a playlist.
-    # the playlist file, however, is exactly that.
-
     with open(PATH_TO_PLAYLIST_FILES + listName + '.m3u') as f:
         content = f.readlines()
 

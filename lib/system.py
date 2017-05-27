@@ -2,6 +2,16 @@ import pickle, os, time
 
 TIME_FILE_NAME = '/Users/adamp/.mpd/hypnotime'
 
+#
+##
+####
+# system utils:
+#  - getCurrentSystemTimeMs() returns system time in milliseconds
+#  - reset() starts system time over at zero
+####
+##
+#
+
 def readTimeFile():
     try:
         with open(TIME_FILE_NAME, 'rb') as filehandle:
