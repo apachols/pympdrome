@@ -135,12 +135,14 @@ def getPlaylist(listName):
     if not resultList is None:
         return resultList
 
-    print '========> Recalculating playlist durations using ffprobe, please wait...'
+    if (DEBUG_PRINTS):
+        print '========> Recalculating playlist durations using ffprobe, please wait...'
     t1 = time.time()
     resultList = calculatePlaylistDurations(listName)
     cache.writeTo(listName, resultList)
     t2 = time.time()
-    print '========> Playlist recalculations complete (in', t2-t1, 'ms)'
+    if (DEBUG_PRINTS):
+        print '========> Playlist recalculations complete (in', t2-t1, 'seconds)'
 
     return resultList
 
