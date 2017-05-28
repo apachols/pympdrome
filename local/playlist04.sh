@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python /Users/adamp/git/pympdrome/launch.py  -p this.is.rap
+python /Users/adamp/git/pympdrome/launch.py  -s this.is.rap

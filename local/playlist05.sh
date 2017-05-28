@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python /Users/adamp/git/pympdrome/launch.py  -p more.noise.please
+python /Users/adamp/git/pympdrome/launch.py  -s more.noise.please

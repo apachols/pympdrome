@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python /Users/adamp/git/pympdrome/launch.py  -p french.exit
+python /Users/adamp/git/pympdrome/launch.py  -s french.exit
