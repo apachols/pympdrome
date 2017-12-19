@@ -1,12 +1,18 @@
 # SYSTEM RESTART
-python launch.py -r 
+python launch.py -r ;
 
 # RELOAD PLAYLISTS
-python launch.py -l -p french.exit ; 
-python launch.py -l -p you.just.found.five.dollars ; 
-python launch.py -l -p too.chill.a.mockingbird ; 
-python launch.py -l -p this.is.rap ; 
-python launch.py -l -p more.noise.please ; 
-python launch.py -l -p eyeballs ; 
-python launch.py -l -p medium ; 
-python launch.py -l -p spin.that.record ; 
+python launch.py -l -p french.brexit.v1 ;
+python launch.py -l -p bounce.tube ;
+python launch.py -l -p have.an.ice.day ;
+python launch.py -l -p more.noise.please ;
+python launch.py -l -p riveted ;
+python launch.py -l -p the.vox.electric ;
+python launch.py -l -p this.is.rap ;
+python launch.py -l -p ski.tour ;
+python launch.py -l -p dubbysteps ;
+python launch.py -l -p spin.that.record ;
+python launch.py -l -p pick.me.up.beat ;
+python launch.py -l -p zone.out ;
+python launch.py -l -p peak ;
+python launch.py -l -p the.comedown ;

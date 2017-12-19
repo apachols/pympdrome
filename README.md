@@ -2,13 +2,19 @@
 
 ###### mpd driver for radio hypnodrome
 
+pympdrome uses the MPD headless music player to simulate gapless playback and station switching between any number of locally stored mp3 playlists.
+
+For example, say you have a 'Slow Jams' playlist, and a 'Hard Rock' playlist.  If the Hard Rock playlist is in the middle of a KYUSS song (e.g. at 3:40), and you switch to the Slow Jams playlist, you'll start in the middle of whatever song is playing (e.g. Alicia Keys).  Switch back to Hard Rock after 5 seconds, and you'll be right where you left off - at 3:45!
+
+###### software you will need to install:
+
 MPD:  Music Player Daemon, a headless music player for *nix / osx / etc
 
 MPC: 'A minimalist command line interface to MPD.'
 
 ffmpeg:  '...record, convert and stream audio and video.'
 
-
+Python 2.7 is required to run the radio launcher.
 
 ## Installation instructions for OS X
 
@@ -139,7 +145,7 @@ mkdir ~/.mpd/hypnocache/
 #### Get pympdrome command help
 ```
  $ python launch.py -h
- 
+
         # switch to <playlist>
         launch.py -p <playlist>
         OR

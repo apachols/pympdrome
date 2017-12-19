@@ -1,3 +1,5 @@
 #!/bin/sh
 
-python /Users/adamp/git/pympdrome/launch.py  -s spin.that.record
+python /Users/adamp/git/pympdrome/launch.py  -s the.vox.electric
+
+

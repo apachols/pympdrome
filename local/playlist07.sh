@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python /Users/adamp/git/pympdrome/launch.py  -s medium
+python /Users/adamp/git/pympdrome/launch.py  -s Dubbysteps
