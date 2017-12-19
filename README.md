@@ -4,7 +4,7 @@
 
 pympdrome uses the MPD headless music player to simulate gapless playback and station switching between any number of locally stored mp3 playlists.
 
-For example, say you have a 'Slow Jams' playlist, and a 'Hard Rock' playlist.  If the Hard Rock playlist is in the middle of a KYUSS song (e.g. at 3:40), and you switch to the Slow Jams playlist, you'll start in the middle of whatever song is playing (e.g. Alicia Keys).  Switch back to Hard Rock after 5 seconds, and you'll be right where you left off - at 3:45!
+For example, say you have a 'Slow Jams' playlist, and a 'Hard Rock' playlist.  If the Hard Rock playlist is in the middle of a KYUSS song (e.g. at 3:40), and you switch to the Slow Jams playlist, you'll start in the middle of whatever song is playing on the Slow Jams "station" (e.g. Alicia Keys).  Switch back to Hard Rock after 5 seconds, and you'll be right where you left off - at 3:45!
 
 ###### software you will need to install:
 
