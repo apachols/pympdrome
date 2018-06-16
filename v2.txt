@@ -17,14 +17,12 @@ Backend:
 
 Frontend:
 
- * Ipad2 + USB (?) + React
  * Ipad2 + WIFI (?) + React
 
  01 - Select channel (RGB) - BIG DUMB COLORS
  02 - Select a playlist (Playlist) - BIG DUMB PICTURES
 
-STRETCH GOAL:  Webapp plays that channel -> iphone headphones?
- * Each MPD instance exposes web port as well
+Red / Blue / Green ipads!
 
-
-
+# COMMAND TO RUN WEBSERVER:
+FLASK_APP=server.py flask run --host=0.0.0.0
