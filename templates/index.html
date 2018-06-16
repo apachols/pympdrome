@@ -1,0 +1,37 @@
+
+<html>
+  <head>
+    <script type="text/javascript">
+
+    </script>
+    <style>
+      l1 {
+        display: block;
+      }
+      .top-bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+      }
+    </style>
+    </head>
+    <body>
+      <div class="top-bar">
+          <div>
+              <h2>
+                  <a href='/next'>Next</a>
+              </h2>
+          </div>
+          <div>
+              <h2>
+                  <a href='/stop'>Stop</a>
+              </h2>
+          </div>  
+      </div>
+      <ul>
+        {% for p in playlists %}
+        <l1><a href='/playlist/{{p}}'>{{p}}</a></l1>
+        {% endfor %}
+      </ul>
+    </body>
+</html>

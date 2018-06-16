@@ -1,0 +1,30 @@
+* * * * * PYMPDROME V2 * * * * * * *
+
+Backend:
+
+01.  Containerize MPD
+     > https://hub.docker.com/r/vitiman/alpine-mpd/
+
+02.  Get containerized audio output working through OSX
+
+03.  Get 2 containers running at the same time and switch between them
+
+04.  Get 2 audio outs working with 1 external soundcard
+
+05.  Get 3 containers running at the same time and switch between them
+
+06.  Get second external soundcard... 3 channels!
+
+Frontend:
+
+ * Ipad2 + USB (?) + React
+ * Ipad2 + WIFI (?) + React
+
+ 01 - Select channel (RGB) - BIG DUMB COLORS
+ 02 - Select a playlist (Playlist) - BIG DUMB PICTURES
+
+STRETCH GOAL:  Webapp plays that channel -> iphone headphones?
+ * Each MPD instance exposes web port as well
+
+
+
