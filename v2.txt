@@ -26,3 +26,51 @@ Red / Blue / Green ipads!
 
 # COMMAND TO RUN WEBSERVER:
 FLASK_APP=server.py flask run --host=0.0.0.0
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+OK HERE IS WHERE WE ARE AT:
+
+Setup #1:
+    OSX:
+        pulseaudio --load=module-native-protocol-tcp --exit-idle-time=-1 --daemon
+    pulseaudio:
+        NO PORT FORWARDING
+    speaker-test -c 2 -l 1 -t wav
+        WORKS
+    mpc play
+        BAD ERROR:  error access denied (this is bad)
+
+Setup #2
+    OSX:
+        PULSEAUDIO NOT RUNNING
+    pulseaudio:
+        "4713:4713"
+    speaker-test -c 2 -l 1 -t wav
+        DOES NOT WORK
+    mpc play
+        GOOD ERROR:  error no such entity default sink not set up (this is progress!)
+
+Speaker-test >> OSX pulseaudio >> which means cannot bind 4713 >> mpc not work
+
+Bind 4713 means cannot have osx pulseaudio, which means no audio...
+
+Also sometimes pulseaudio thinks daemon is already running?
+
+
+https://www.freedesktop.org/wiki/Software/PulseAudio/Documentation/User/Network/
+
+https://wiki.archlinux.org/index.php/Music_Player_Daemon#Audio_configuration
+https://stackoverflow.com/questions/40136606/how-to-expose-audio-from-docker-container-to-a-mac
+https://www.freedesktop.org/wiki/Software/PulseAudio/Documentation/User/PerfectSetup/
+https://stackoverflow.com/questions/28985714/run-apps-using-audio-in-a-docker-container
+https://bugs.launchpad.net/ubuntu/+source/mpd/+bug/192735
+https://github.com/jessfraz/dockerfiles/blob/master/pulseaudio/Dockerfile
+
+https://bbs.archlinux.org/viewtopic.php?id=165858
+https://github.com/andrewbuss/docker-mpd-pulseaudio/blob/master/mpd.conf

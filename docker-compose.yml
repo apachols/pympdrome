@@ -1,0 +1,22 @@
+version: '3'
+services:
+  mpd:
+    build: ./docker/mpd
+    ports:
+    - "6600:6600"
+    - "8000:8000"
+    volumes:
+    - ~/Music/MPD:/home/Music/MPD
+    - ~/.mpd:/home/.mpd
+  pulseaudio:
+    build: ./docker/pulseaudio
+    ports:
+    - "6600:6600"
+    volumes:
+    # - ~/git/pympdrome/docker/mpd/mpd.conf/:/etc/mpd/mpd.conf
+    # - ~/git/pympdrome/default.pa:/etc/pulse/default.pa
+    - ~/.config/pulse:/home/pulseaudio/.config/pulse
+    - ~/Music/MPD:/home/Music/MPD
+    - ~/.mpd:/home/.mpd
+    environment:
+    - PULSE_SERVER=docker.for.mac.localhost
