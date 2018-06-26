@@ -49,29 +49,35 @@
     </style>
     </head>
     <body>
-      <div class="header">
-          <div class="top-bar">
-              <div class="top-bar-cell">
-                  <h2>
-                      <a href='/next'>Next!</a>
-                  </h2>
-              </div>
-              <div class="top-bar-cell">
-                  <h2>
-                      <a href='/stop'>Stop</a>
-                  </h2>
-              </div>  
-          </div>
-      </div>
-      <div class="content">
-          <div class="radio-station-grid">
-              {% for p in playlists %}
-              <div id="radio-station-{{p}}" class="radio-station-grid-cell">
-                <a href='/playlist/{{p}}'>{{p}}</a>
-              </div>
-              {% endfor %}
-          </div>
-      </div>
-
+        <div class="header">
+            <div class="top-bar">
+                <div class="top-bar-cell">
+                    <h2>
+                        <a href='/next/{{playing}}'>Next!</a>
+                    </h2>
+                </div>
+                {% if playing %}
+                <div class="top-bar-cell">
+                    <h2>
+                        Now Playing:  {{playing}}
+                    </h2>
+                </div>
+                {% endif %}
+                <div class="top-bar-cell">
+                    <h2>
+                        <a href='/stop/{{playing}}'>Stop</a>
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="radio-station-grid">
+                {% for p in playlists %}
+                <div id="radio-station-{{p}}" class="radio-station-grid-cell">
+                    <a href='/playlist/{{p}}'>{{p.replace('.',' ')}}</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </body>
 </html>

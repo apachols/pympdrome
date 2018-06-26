@@ -16,21 +16,29 @@ def get_playlists():
 playlists = get_playlists()
 
 @app.route("/")
-def index():
-    return render_template('index.html', playlists=playlists)
+def index(playing=""):
+    return render_template(
+        'index.html',
+        playlists=playlists,
+        playing=playing
+    )
 
-@app.route("/next")
-def next():
+@app.route("/next/")
+@app.route("/next/<playlist>")
+def next(playlist=None):
+    if not playlist:
+        playlist = system.getCurrentPlaylistName()
     radio.skipToNextSong()
-    return redirect('/')
+    return redirect('/playlist/{}'.format(playlist))
 
-@app.route("/stop")
-def stop():
+@app.route("/stop/")
+@app.route("/stop/<playlist>")
+def stop(playlist=""):
     radio.stopPlayback()
     return redirect('/')
 
 @app.route('/playlist/<playlist>')
 def playlist(playlist):
     radio.smartHandleButtonPress(playlist)
-    return redirect('/')
+    return index(playlist)
 
