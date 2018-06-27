@@ -2,93 +2,90 @@
 <html>
   <head>
     <style>
-      body {
-        min-height: 100vh;
-        min-width: 100%;
-        margin: 0px;
-        font-family: helvetica;
-      }
-      .header {
-        background-color: #d8f7f5;
-      }
-      .content {
-        background-color: black;
-        min-height: 100vh;
-      }
-      .top-bar {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      .top-bar-cell {
-        flex: 1;
-        text-align: center;
-      }
-      a:link {
-        color: rgba(23, 105, 199, 0.795);
-        text-decoration: none;
-      }
-      a:visited {
-        color:  rgba(23, 105, 199, 0.795);
-        text-decoration: none;
-      }
-      .playing-title {
-        color: blueviolet;
-      }
-      .radio-station-grid {
-        font-size: x-large;
-        display: flex;
-        flex-wrap: wrap;
-        min-height: 70vh;
-        min-width: 100%;
-      }
-      .radio-station-grid-cell {
-        width: calc(25vw - 2px);
-        height: calc(22vh - 5px);
-        border: 1px solid;
-        text-align: center;
-        overflow: auto;
-        position: relative;
-      }
-      .placekitten {
-        width: 100%;
-        max-height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-      .radio-station-grid-cell-text-div {
-          position: absolute;
-          width: 100%;
-      }
-      .radio-station-grid-cell-text {
-        display: block;
-        color: #fff;
-        text-shadow: 0px 1px 0px black, 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #ff2d95, 0 0 30px #ff2d95, 0 0 40px #ff2d95, 0 0 50px #ff2d95, 0 0 75px #ff2d95;
-        font: 30px;
-      }
+        body {
+            min-height: 100vh;
+            min-width: 100%;
+            margin: 0px;
+            font-family: helvetica;
+        }
+        .header {
+            background-color: #d8f7f5;
+        }
+        .content {
+            background-color: black;
+            min-height: 90vh;
+        }
+        .top-bar {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        .top-bar-cell {
+            flex: 1;
+            text-align: center;
+        }
+        a:link {
+            color: rgba(23, 105, 199, 0.795);
+            text-decoration: none;
+        }
+        a:visited {
+            color:  rgba(23, 105, 199, 0.795);
+            text-decoration: none;
+        }
+        .playing-title {
+            color: blueviolet;
+        }
+        .radio-station-grid {
+            font-size: x-large;
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 70vh;
+            min-width: 100%;
+        }
+        .radio-station-grid-cell {
+            width: calc(25vw - 2px);
+            height: calc(22vh - 15px);
+            border: 1px solid;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .placekitten {
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .radio-station-grid-cell-text-div {
+            position: absolute;
+            width: 100%;
+            top: 110px;
+        }
+        .radio-station-grid-cell-text {
+            display: block;
+            color: #fff;
+            text-shadow: -1px 2px 0px black, 0 2px 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #ff2d95, 0 0 30px #ff2d95, 0 0 40px #ff2d95, 0 0 50px #ff2d95, 0 0 75px #ff2d95;
+            font: 30px;
+        }
     </style>
     </head>
     <body>
         <div class="header">
             <div class="top-bar">
                 <div class="top-bar-cell">
-                    <h2>
-                        <a href='/next/{{playing}}'>Next!</a>
+                    <h2 id="js-next-button" class="click-animate">
+                        Next!
                     </h2>
                 </div>
                 <div class="top-bar-cell">
                     <h2>
-                        {% if playing %}
-                        <span class="playing-title">
-                            🎵 {{playing.replace('.', ' ')}} 🎵
+                        <span id="js-playing-title" class="playing-title">
                         </span>
-                        {% endif %}
                     </h2>
                 </div>
                 <div class="top-bar-cell">
-                    <h2>
-                        <a href='/stop/{{playing}}'>Stop</a>
+                    <h2 id="js-stop-button" class="click-animate">
+                        Stop
                     </h2>
                 </div>
             </div>
@@ -96,18 +93,46 @@
         <div class="content">
             <div class="radio-station-grid">
                 {% for p in playlists %}
-                <a href='/playlist/{{p}}'>
-                    <div id="radio-station-{{p}}" class="radio-station-grid-cell">
-                        <img class="placekitten" src="http://placekitten.com/256/165"/>
-                        <div class="radio-station-grid-cell-text-div">
-                            <span class="radio-station-grid-cell-text">
-                                {{p.replace('.', ' ')}}
-                            </span>
-                        </div>
+                <div id="radio-station-{{p}}" class="radio-station-grid-cell">
+                    <img class="placekitten" src="/static/{{p}}.jpg"/>
+                    <div class="radio-station-grid-cell-text-div">
+                        <span class="radio-station-grid-cell-text">
+                            {{p.replace('.', ' ')}}
+                        </span>
                     </div>
-                </a>
+                </div>
                 {% endfor %}
             </div>
         </div>
+        <script type='text/javascript'>
+            var ajaxToNewState = function(url) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', url);
+                xhr.send(null);
+                window.history.pushState({}, "", url);
+            }
+            var init = function () {
+                document.getElementById('js-next-button').ontouchstart = function(e) {
+                    ajaxToNewState('/next/{{playing}}');
+                }
+                document.getElementById('js-stop-button').ontouchstart = function(e) {
+                    ajaxToNewState('/stop/{{playing}}');
+                }
+                var titleSpan = document.getElementById('js-playing-title');
+                var station = null;
+                {% for p in playlists %}
+                station = document.getElementById('radio-station-{{p}}');
+                var stationHandler = function(e) {
+                    titleSpan.innerHTML = '🎵 {{p.replace('.', ' ')}} 🎵';
+                    e.preventDefault();
+                    if (window.location.href.split('/').pop() != '{{p}}') {
+                        ajaxToNewState('/playlist/{{p}}');
+                    }
+                }
+                station.ontouchstart = stationHandler;
+                {% endfor %}
+            }
+            setTimeout(init, 200);
+        </script>
     </body>
 </html>
