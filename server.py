@@ -8,10 +8,14 @@ from lib import radio, system
 import subprocess
 
 app = Flask(__name__)
-# app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 300
+
+ROOT_DIR = '/Users/adamp'
+ROOT_DIR = '/home'
+
+PLAYLISTDIR = '{}/Music/MPD'.format(ROOT_DIR)
 
 def get_playlists():
-    ls = subprocess.check_output(['ls', '/Users/adamp/Music/MPD'], stderr=subprocess.STDOUT)
+    ls = subprocess.check_output(['ls', PLAYLISTDIR], stderr=subprocess.STDOUT)
     return [x for x in ls.split('\n') if x]
 
 playlists = get_playlists()
@@ -43,3 +47,5 @@ def launch(playlist):
     radio.launchPlaylist(playlist)
     return index(playlist)
 
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')

@@ -10,17 +10,18 @@ RUN apt-get update && apt-get install -y \
 	libasound2-plugins \
 	pulseaudio \
 	pulseaudio-utils \
+	mpd mpc \
+	python-pip python-dev build-essential python-setuptools \
 	--no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y mpd
-RUN apt-get install -y mpc
+# RUN apt-get update && apt-get install -y mpd
+# RUN apt-get install -y mpc
 
 ENV HOME /home/pulseaudio
 RUN useradd --create-home --home-dir $HOME pulseaudio \
 	&& usermod -aG audio,pulse,pulse-access pulseaudio \
 	&& chown -R pulseaudio:pulseaudio $HOME
-
 
 # RUN mkdir /home/.mpd
 # RUN usermod -aG audio,pulse,pulse-access mpd \
@@ -33,6 +34,9 @@ COPY mpd.conf /etc/mpd.conf
 
 WORKDIR $HOME
 USER pulseaudio
+
+COPY requirements.txt /home/requirements.txt
+RUN pip install -r /home/requirements.txt
 
 VOLUME /var/lib/mpd
 

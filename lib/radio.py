@@ -4,8 +4,11 @@ from lib import ffprobe, system, cache
 
 DEBUG_PRINTS = False
 
-PATH_TO_MUSIC_DB_FILES = '/Users/adamp/Music/MPD/'
-PATH_TO_PLAYLIST_FILES = '/Users/adamp/.mpd/playlists/'
+ROOT_DIR = '/Users/adamp'
+ROOT_DIR = '/home'
+
+PATH_TO_MUSIC_DB_FILES = '{}/Music/MPD/'.format(ROOT_DIR)
+PATH_TO_PLAYLIST_FILES = '{}/.mpd/playlists/'.format(ROOT_DIR)
 
 #
 ##

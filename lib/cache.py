@@ -1,6 +1,9 @@
 import pickle, os
 
-CACHE_FILE_PATH = '/Users/adamp/.mpd/hypnocache/'
+ROOT_DIR = '/Users/adamp'
+ROOT_DIR = '/home'
+
+CACHE_FILE_PATH = '{}/.mpd/hypnocache/'.format(ROOT_DIR)
 
 #
 ##
