@@ -1,6 +1,8 @@
 import signal
 import subprocess
 import os
+from time import sleep
+import sys
 
 os.environ['PATH'] += os.pathsep + '/usr/local/bin'
 
@@ -63,9 +65,20 @@ def execute(cmd):
         os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
         return stdout_line
 
+def signal_handler(signal, frame):
+    os.system("killall -9 pactl subscribe");
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
 while True:
+    try:
+        fix_sink_routing()
+    except Exception:
+        print "EXCEPTION"
+
     out = ''
     for line in execute(["pactl", "subscribe"]):
         out += line
     print out
-    fix_sink_routing()
+    sleep(0.250)
