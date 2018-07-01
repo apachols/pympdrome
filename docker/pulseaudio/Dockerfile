@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
 	&& rm -rf /var/lib/apt/lists/*
 
 ARG color
+ARG pulse_server
 
 ENV HOME /home/$color
 RUN useradd --create-home --home-dir $HOME pulseaudio \
@@ -23,6 +24,8 @@ RUN useradd --create-home --home-dir $HOME pulseaudio \
 	&& chown -R pulseaudio:pulseaudio $HOME
 
 COPY mpd.conf /etc/mpd.conf
+
+RUN echo "load-module module-tunnel-sink-new server=$pulse_server channels=2 rate=44100" > /etc/pulse/default.pa
 
 COPY requirements.txt /home/requirements.txt
 RUN pip install -r /home/requirements.txt
@@ -32,7 +35,8 @@ USER pulseaudio
 
 VOLUME /var/lib/mpd
 
-COPY default.pa /etc/pulse/default.pa
+# COPY default.pa /etc/pulse/default.pa
+
 # COPY client.conf /etc/pulse/client.conf
 # COPY daemon.conf /etc/pulse/daemon.conf
 

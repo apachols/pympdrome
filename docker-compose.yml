@@ -5,6 +5,7 @@ services:
       context: ./docker/pulseaudio
       args: 
         color: blue
+        pulse_server: docker.for.mac.localhost
     ports:
     - "6601:6600"
     - "5001:5000"
@@ -20,6 +21,7 @@ services:
       context: ./docker/pulseaudio
       args: 
         color: red
+        pulse_server: docker.for.mac.localhost
     ports:
     - "6602:6600"
     - "5002:5000"

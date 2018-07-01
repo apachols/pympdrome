@@ -124,3 +124,16 @@ dc rm -f red && dc up -d red
 docker exec -it $(docker ps -aqf "name=pympdrome_red_1") mpd
 docker exec -it -e FLASK_DEBUG=1 $(docker ps -aqf "name=pympdrome_red_1") python /home/server.py
 
+MODULE DOCS
+
+https://www.freedesktop.org/wiki/Software/PulseAudio/Documentation/User/Modules/#index13h3
+
+
+NOW WITH 100% MORE TUNNELS
+
+inputs = pactl list short sink-inputs | grep "s24-32le 2ch 44100Hz" | awk '{print $1}'
+
+outputs = ('Output_1__Output_2__Output_3__Output_4', 'Channel_1__Channel_2.2')
+sinks = [21, 23]
+for sink, idx in enumerate(sinks):
+    "pactl move-sink-input {} {}".format(sink, outputs[idx])
