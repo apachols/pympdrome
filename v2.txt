@@ -62,7 +62,7 @@ Bind 4713 means cannot have osx pulseaudio, which means no audio...
 
 Also sometimes pulseaudio thinks daemon is already running?
 
-SOLUTION = put MPC into the pulseaudio container lol
+SOLUTION = put MPD/MPC into the pulseaudio container lol
 
 
 https://www.freedesktop.org/wiki/Software/PulseAudio/Documentation/User/Network/
@@ -88,3 +88,39 @@ pulseaudio --load=module-native-protocol-tcp --exit-idle-time=-1 --daemon
 
  /usr/local/Cellar/pulseaudio/12.0/etc/pulse
  $ pactl move-sink-input 525 1
+
+
+ (adamp-containerize) ~/git/pympdrome
+ $ pactl set-default-sink 1
+
+ (adamp-containerize) ~/git/pympdrome
+ $ pacmd set-default-sink 1
+
+
+ https://askubuntu.com/questions/773864/how-do-i-split-my-usb-sound-card-recognized-as-5-1-into-3-stereo-channels/774140#774140
+
+
+pactl list short sinks
+0	Channel_1__Channel_2.2	module-coreaudio-device.c	float32le 2ch 44100Hz	SUSPENDED
+1	Output_1__Output_2__Output_3__Output_4	module-coreaudio-device.c	float32le 4ch 192000Hz	SUSPENDED
+
+
+ OK NOW WHAT WE NEED TO DO IS:
+
+  * Test on airport extreme
+  * Test running 2 ipads
+  * Ensure we can change the MP3s with out screwing it up
+  * Do the setup steps on airport extreme
+  * Make sure we can still run it in "default mode"
+  * Do something about python environment variables
+  * Make assigning sinks easier...
+  * Automate system startup (mpd, flask)
+
+dc rm -f blue && dc up -d blue
+docker exec -it $(docker ps -aqf "name=pympdrome_blue_1") mpd
+docker exec -it -e FLASK_DEBUG=1 $(docker ps -aqf "name=pympdrome_blue_1") python /home/server.py
+
+dc rm -f red && dc up -d red
+docker exec -it $(docker ps -aqf "name=pympdrome_red_1") mpd
+docker exec -it -e FLASK_DEBUG=1 $(docker ps -aqf "name=pympdrome_red_1") python /home/server.py
+

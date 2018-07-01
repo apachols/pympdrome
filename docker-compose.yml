@@ -1,14 +1,32 @@
 version: '3'
 services:
   blue:
-    build: ./docker/pulseaudio
+    build: 
+      context: ./docker/pulseaudio
+      args: 
+        color: blue
     ports:
     - "6601:6600"
     - "5001:5000"
     volumes:
-    - ~/.config/pulse:/home/pulseaudio/.config/pulse
+    - ~/.config/pulse:/home/blue/.config/pulse
     - ~/Music/MPD:/home/Music/MPD
     - ~/.mpd/blue:/home/.mpd
+    - ~/git/pympdrome:/home/
+    environment:
+    - PULSE_SERVER=docker.for.mac.localhost
+  red:
+    build: 
+      context: ./docker/pulseaudio
+      args: 
+        color: red
+    ports:
+    - "6602:6600"
+    - "5002:5000"
+    volumes:
+    - ~/.config/pulse:/home/red/.config/pulse
+    - ~/Music/MPD:/home/Music/MPD
+    - ~/.mpd/red:/home/.mpd
     - ~/git/pympdrome:/home/
     environment:
     - PULSE_SERVER=docker.for.mac.localhost

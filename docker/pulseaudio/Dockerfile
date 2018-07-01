@@ -15,28 +15,20 @@ RUN apt-get update && apt-get install -y \
 	--no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
-# RUN apt-get update && apt-get install -y mpd
-# RUN apt-get install -y mpc
+ARG color
 
-ENV HOME /home/pulseaudio
+ENV HOME /home/$color
 RUN useradd --create-home --home-dir $HOME pulseaudio \
 	&& usermod -aG audio,pulse,pulse-access pulseaudio \
 	&& chown -R pulseaudio:pulseaudio $HOME
 
-# RUN mkdir /home/.mpd
-# RUN usermod -aG audio,pulse,pulse-access mpd \
-#     && chown -R mpd /home/.mpd
-# USER mpd
-
 COPY mpd.conf /etc/mpd.conf
-
-# RUN mpd --stdout
-
-WORKDIR $HOME
-USER pulseaudio
 
 COPY requirements.txt /home/requirements.txt
 RUN pip install -r /home/requirements.txt
+
+WORKDIR $HOME
+USER pulseaudio
 
 VOLUME /var/lib/mpd
 
