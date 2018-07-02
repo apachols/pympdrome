@@ -71,14 +71,17 @@ def fix_sink_routing():
         move_sink_input(green['sink'], green['output'])
 
 
-def execute(cmd):
+def pa_ctrl_changes(cmd):
     proc = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, universal_newlines=True, preexec_fn=os.setsid
     )
     for stdout_line in iter(proc.stdout.readline, ""):
-        proc.stdout.close()
-        os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
-        return stdout_line
+        if not 'remove' in stdout_line and 'sink-input #' in stdout_line:
+            proc.stdout.close()
+            os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+            return stdout_line
+        else:
+            pass
 
 def signal_handler(signal, frame):
     os.system("killall -9 pactl subscribe")
@@ -87,14 +90,14 @@ def signal_handler(signal, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 while True:
+    out = ''
+    for line in pa_ctrl_changes(["pactl", "subscribe"]):
+        out += line
+    print out
+    sleep(0.125)
+
     try:
         fix_sink_routing()
     except Exception as exc:
         print "EXCEPTION"
         print exc
-
-    out = ''
-    for line in execute(["pactl", "subscribe"]):
-        out += line
-    print out
-    sleep(0.250)

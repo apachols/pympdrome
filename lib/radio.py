@@ -75,7 +75,7 @@ def loadPlaylistIntoMPC(listName, shuffle):
     subprocess.check_output(['mpc', 'save', listName])
 
 def stopPlayback():
-    subprocess.check_output(['mpc', 'stop'])
+    subprocess.check_output(['mpc', 'pause'])
 
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

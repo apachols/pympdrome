@@ -26,10 +26,13 @@ RUN useradd --create-home --home-dir $HOME pulseaudio \
 
 COPY mpd.conf /etc/mpd.conf
 
+RUN echo $color > /etc/color.txt
+
 RUN echo "load-module module-tunnel-sink-new server=$pulse_server channels=2 rate=44100" > /etc/pulse/default.pa
 
 COPY requirements.txt /home/requirements.txt
 RUN pip install -r /home/requirements.txt
+
 
 WORKDIR $HOME
 USER pulseaudio
@@ -37,7 +40,6 @@ USER pulseaudio
 VOLUME /var/lib/mpd
 
 # COPY default.pa /etc/pulse/default.pa
-
 # COPY client.conf /etc/pulse/client.conf
 # COPY daemon.conf /etc/pulse/daemon.conf
 

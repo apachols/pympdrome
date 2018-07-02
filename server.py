@@ -13,6 +13,13 @@ ROOT_DIR = '/Users/adamp'
 ROOT_DIR = '/home'
 
 PLAYLISTDIR = '{}/Music/MPD'.format(ROOT_DIR)
+COLOR = '/etc/color.txt'
+
+def file_get_contents(filename):
+    with open(filename) as f:
+        return f.read()
+
+color = file_get_contents(COLOR)
 
 def get_playlists():
     ls = subprocess.check_output(['ls', PLAYLISTDIR], stderr=subprocess.STDOUT)
@@ -25,7 +32,8 @@ def index(playing=""):
     return render_template(
         "index.html",
         playlists=playlists,
-        playing=playing
+        playing=playing,
+        color=color
     )
 
 @app.route("/next/")
