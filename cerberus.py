@@ -66,7 +66,7 @@ def execute(cmd):
         return stdout_line
 
 def signal_handler(signal, frame):
-    os.system("killall -9 pactl subscribe");
+    os.system("killall -9 pactl subscribe")
     sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)

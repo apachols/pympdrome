@@ -4,7 +4,7 @@
 
 FROM debian:sid
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -yqq \
 	alsa-utils \
 	libasound2 \
 	libasound2-plugins \
@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
 	pulseaudio-utils \
 	mpd mpc \
 	python-pip python-dev build-essential python-setuptools \
+	ffmpeg \
 	--no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 

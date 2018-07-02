@@ -73,8 +73,9 @@ def writeFile(filename, data):
         pickle.dump(data, filehandle)
 
 # Restart MPD!  After this you will need to re-add files to the system using -l
-def restartMpd():
-    subprocess.check_output(['killall', 'mpd'])
+def restartMpd(killall_mpd=False):
+    if killall_mpd:
+        subprocess.check_output(['killall', 'mpd'])
 
     if (os.path.isfile(DB_FILE_NAME)):
         os.remove(DB_FILE_NAME)

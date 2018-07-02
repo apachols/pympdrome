@@ -208,26 +208,8 @@ mpd
 
 #### Refresh the system after changing the files in the playlists
 ```
-killall mpd
-rm ~/.mpd/database && touch ~/.mpd/database
-rm ~/.mpd/state
-mpd
+python launch.py -r
 
-# Clear playlist cache
-rm ~/.mpd/hypnocache/*
-
-# Clear out current queue
-mpc clear
-
-# Remove playlists
-mpc rm playlist01
-mpc rm playlist02
-
-# Add folders back in and save to playlists
-mpc add folder01
-mpc save playlist01
-mpc clear
-mpc add folder02
-mpc save playlist02
-mpc clear
+for playlist in get_playlists():
+    python launch.py -l -p <playlist>
 ```

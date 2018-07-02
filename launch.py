@@ -45,7 +45,7 @@ def main(argv):
             exit()
         elif opt in ("-r"): #, "--reset"):
             print 'SYSTEM RESET'
-            system.restartMpd()
+            system.restartMpd(killall_mpd=True)
             system.reset()
             exit()
         elif opt in ("-l"): #, "--load"):
