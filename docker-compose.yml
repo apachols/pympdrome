@@ -32,3 +32,19 @@ services:
     - ~/git/pympdrome:/home/
     environment:
     - PULSE_SERVER=docker.for.mac.localhost
+  green:
+    build: 
+      context: ./docker/pulseaudio
+      args: 
+        color: green
+        pulse_server: docker.for.mac.localhost
+    ports:
+    - "6603:6600"
+    - "5003:5000"
+    volumes:
+    - ~/.config/pulse:/home/green/.config/pulse
+    - ~/Music/MPD:/home/Music/MPD
+    - ~/.mpd/green:/home/.mpd
+    - ~/git/pympdrome:/home/
+    environment:
+    - PULSE_SERVER=docker.for.mac.localhost

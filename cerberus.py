@@ -14,16 +14,26 @@ red_instance = subprocess.check_output([
     'docker', 'ps', '-aqf', 'name=pympdrome_red_1'
 ], stderr=subprocess.STDOUT).strip()
 
+green_instance = subprocess.check_output([
+    'docker', 'ps', '-aqf', 'name=pympdrome_green_1'
+], stderr=subprocess.STDOUT).strip()
+
 blue = {
     "instance": blue_instance,
     "sink": None,
-    "output": "Output_1__Output_2__Output_3__Output_4"
+    "output": "Channel_1__Channel_2.2"
 }
 
 red = {
     "instance": red_instance,
     "sink": None,
-    "output": "Channel_1__Channel_2.2"
+    "output": "Front_Left__Front_Right"
+}
+
+green = {
+    "instance": green_instance,
+    "sink": None,
+    "output": "Front_Left__Front_Right.2"
 }
 
 def fix_sink_routing():
@@ -44,6 +54,8 @@ def fix_sink_routing():
             blue['sink'] = get_sink_input_number(sink)
         if red_instance in sink:
             red['sink'] = get_sink_input_number(sink)
+        if green_instance in sink:
+            green['sink'] = get_sink_input_number(sink)
 
     def move_sink_input(sink_input_number, output_name):
         cmd = 'pactl move-sink-input {} \"{}\"'.format(sink_input_number, output_name)
@@ -54,6 +66,9 @@ def fix_sink_routing():
 
     if blue.get('sink'):
         move_sink_input(blue['sink'], blue['output'])
+
+    if green.get('sink'):
+        move_sink_input(green['sink'], green['output'])
 
 
 def execute(cmd):
@@ -74,8 +89,9 @@ signal.signal(signal.SIGINT, signal_handler)
 while True:
     try:
         fix_sink_routing()
-    except Exception:
+    except Exception as exc:
         print "EXCEPTION"
+        print exc
 
     out = ''
     for line in execute(["pactl", "subscribe"]):
