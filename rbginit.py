@@ -21,23 +21,23 @@ def get_playlists():
 
 # START MPD
 
-if (os.path.isfile(MPD_STATE_FILE_NAME)):
-    os.remove(MPD_STATE_FILE_NAME)
+# if (os.path.isfile(MPD_STATE_FILE_NAME)):
+#     os.remove(MPD_STATE_FILE_NAME)
 
-subprocess.check_output(['mpd'])
+# if (os.path.isfile(DB_FILE_NAME)):
+#     os.remove(DB_FILE_NAME)
 
-if (os.path.isfile(DB_FILE_NAME)):
-    os.remove(DB_FILE_NAME)
+# subprocess.check_output(['mpd'])
+
+# sleep(3)
+# print 'sleeping...'
 
 # CLEAR HYPNO CACHE FILES
-system.reset()
-
-sleep(3)
-print 'sleeping...'
+# system.reset()
 
 # RELOAD ALL PLAYLISTS
 for playlist in get_playlists():
-    print 'Reloading', playlist, 'shuffle on'
+    print 'Reloading', '||' + playlist + '||', 'shuffle on'
     shuffle = True
     radio.loadPlaylistIntoMPC(playlist, True)
     radio.launchPlaylist(playlist)

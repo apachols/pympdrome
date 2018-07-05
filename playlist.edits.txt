@@ -1,0 +1,182 @@
+
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls Indie | wc -l;
+     183
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls Rap | wc -l;
+      52
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls Riveted | wc -l;
+      93
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls davestep | wc -l;
+      49
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls dubbysteps | wc -l;
+      87
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls electroswing | wc -l;
+      43
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls evil.chill | wc -l;
+      73
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls evil.groove | wc -l;
+     102
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls evil.medium | wc -l;
+     125
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls french.exit | wc -l;
+     212
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls happy.chill | wc -l;
+     118
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls happy.dance | wc -l;
+     134
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls happy.medium | wc -l;
+      93
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls more.noise.please | wc -l;
+      80
+
+ ~/Music/hypnodrome/mpd_2018
+ $ ls zone.out | wc -l;
+     129
+
+
+OPERATIONS:
+
+✅ [Create Playlist] Happy Fast
+✅ [Create Playlist] Evil Fast
+✅ [Create Playlist] Happy Medium
+✅ [Create Playlist] Evil Medium
+✅ [Create Playlist] Happy Slow
+
+✅ [Resort Playlist] bounce.tube
+✅ [Resort Playlist] the.vox.electric
+✅ [Resort Playlist] have.an.ice.day
+✅ [Resort Playlist] peak
+✅ [Resort Playlist] the.comedown
+
+✅ [Resort Playlist] Atmospheric
+✅ [Resort Playlist] Electronic Other
+✅ [Resort Playlist] songs
+✅ [Resort Playlist] weird
+✅ [Resort Playlist] xtina-chill
+✅ [Resort Playlist] demi
+✅ [Resort Playlist] xtina-upbeat
+
+✅ [Remove Songs   ] French Brexit v1
+
+✅ [Add New Songs  ] Ski Tour
+✅ [Add New Songs  ] More Noise Please
+✅ [Add New Songs  ] Happy Electro
+✅ [Add New Songs  ] French Exit
+✅ [Add New Songs  ] Riveted
+✅ [Create Playlist] Dubbysteps 3.0 
+
+✅ [Leave Playlist ] spin.that.record
+✅ [Leave Playlist ] zone.out
+✅ [Leave Playlist ] this.is.rap
+
+== Method ==
+
+[Resort playlist]
+    Add files in playlist.from to clementine playlist
+    Listen, and when decision, drag into folder
+
+[Remove duplicates]
+    Load folder into Clementine Playlist
+    Remove duplicates
+    Drag songs from clementine into new folder
+    Confirm no duplicates
+
+
+== existing ==
+
+ski.tour
+
+bounce.tube
+have.an.ice.day
+the.vox.electric
+
+french brexit v1
+dubbysteps
+more noise please
+
+peak
+comedown
+
+pick me up beat
+zone out
+spin that record
+
+this is rap
+riveted
+
+== dance order == 
+
+ski.tour
+dubbysteps
+spin that record
+pick me up beat
+
+STATION X
+STATION Y
+
+bounce.tube
+the.vox.electric
+have.an.ice.day
+
+french brexit v1
+
+this is rap
+peak
+zone out
+riveted
+comedown
+more noise please
+
+== proposal == 
+
+DaveStep
+WEIRD
+Other
+Atmospheric
+Songs
+
+                                    Vox Electric
+                                    have.an.ice.day
+                                    bounce.tube
+STATION X
+STATION Y
+
+=> 
+
+Evil Dance (the.vox.electric)
+Good Dance (bounce.tube)
+
+Evil Other (Station X)
+Good Other (Station Y)
+
+Atmopheric (have.an.ice.day)
+French Brexit v2 (French brexit v1)
+
+
