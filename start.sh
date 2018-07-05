@@ -10,4 +10,4 @@ docker exec -it $CONTAINER_ID mpd
 
 sleep 1;
 
-docker exec -it -e FLASK_DEBUG=1 $CONTAINER_ID python /home/server.py;
+docker exec -it -e FLASK_DEBUG=1 $CONTAINER_ID python /home/server.py $2;
