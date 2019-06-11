@@ -9,7 +9,7 @@
             font-family: helvetica;
         }
         .header {
-            background-color: #d8f7f5;
+            background-color: {{color}};
         }
         .content {
             background-color: black;
@@ -32,14 +32,11 @@
             color:  rgba(23, 105, 199, 0.795);
             text-decoration: none;
         }
-        .playing-title {
-            color: blueviolet;
-        }
         .radio-station-grid {
             font-size: x-large;
             display: flex;
             flex-wrap: wrap;
-            min-height: 70vh;
+            /* min-height: 70vh; */
             min-width: 100%;
         }
         .radio-station-grid-cell {
@@ -63,8 +60,10 @@
         }
         .radio-station-grid-cell-text {
             display: block;
+        }
+        .shiny-neon-text {
             color: #fff;
-            text-shadow: -1px 2px 0px black, 0 2px 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #ff2d95, 0 0 30px #ff2d95, 0 0 40px #ff2d95, 0 0 50px #ff2d95, 0 0 75px #ff2d95;
+            text-shadow: -1px 2px 0px black, 0 2px 5px #fff, 0 0 10px #fff, 0 0 15px #ff2d95, 0 0 20px #ff2d95, 0 0 30px #ff2d95, 0 0 40px #ff2d95, 0 0 50px #ff2d95, 0 0 75px #ff2d95;
             font: 30px;
         }
     </style>
@@ -73,18 +72,19 @@
         <div class="header">
             <div class="top-bar">
                 <div class="top-bar-cell">
-                    <h2 id="js-next-button" class="click-animate">
+                    <h2 id="js-next-button" class="shiny-neon-text click-animate">
                         Next!
                     </h2>
                 </div>
                 <div class="top-bar-cell">
                     <h2>
-                        <span id="js-playing-title" class="playing-title">
+                        <span id="js-playing-title" class="shiny-neon-text playing-title">
+                            {{color}}
                         </span>
                     </h2>
                 </div>
                 <div class="top-bar-cell">
-                    <h2 id="js-stop-button" class="click-animate">
+                    <h2 id="js-stop-button" class="shiny-neon-text click-animate">
                         Stop
                     </h2>
                 </div>
@@ -96,7 +96,7 @@
                 <div id="radio-station-{{p}}" class="radio-station-grid-cell">
                     <img class="placekitten" src="/static/{{p}}.jpg"/>
                     <div class="radio-station-grid-cell-text-div">
-                        <span class="radio-station-grid-cell-text">
+                        <span class="radio-station-grid-cell-text shiny-neon-text">
                             {{p.replace('.', ' ')}}
                         </span>
                     </div>

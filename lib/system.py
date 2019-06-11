@@ -2,10 +2,13 @@ import pickle, os, time, subprocess
 
 from lib import cache
 
-MPD_STATE_FILE_NAME = '/Users/adamp/.mpd/state'
-DB_FILE_NAME = '/Users/adamp/.mpd/database'
-TIME_FILE_NAME = '/Users/adamp/.mpd/hypnotime'
-CURRENT_PLAYLIST_FILE_NAME = '/Users/adamp/.mpd/hypnoplaylist'
+ROOT_DIR = '/Users/adamp'
+ROOT_DIR = '/home'
+
+MPD_STATE_FILE_NAME = '{}/.mpd/state'.format(ROOT_DIR)
+DB_FILE_NAME = '{}/.mpd/database'.format(ROOT_DIR)
+TIME_FILE_NAME = '{}/.mpd/hypnotime'.format(ROOT_DIR)
+CURRENT_PLAYLIST_FILE_NAME = '{}/.mpd/hypnoplaylist'.format(ROOT_DIR)
 
 #
 ##
@@ -70,8 +73,9 @@ def writeFile(filename, data):
         pickle.dump(data, filehandle)
 
 # Restart MPD!  After this you will need to re-add files to the system using -l
-def restartMpd():
-    subprocess.check_output(['killall', 'mpd'])
+def restartMpd(killall_mpd=False):
+    if killall_mpd:
+        subprocess.check_output(['killall', 'mpd'])
 
     if (os.path.isfile(DB_FILE_NAME)):
         os.remove(DB_FILE_NAME)
