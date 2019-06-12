@@ -3,7 +3,7 @@ import pickle, os, time, subprocess
 from lib import cache
 
 ROOT_DIR = '/Users/adamp'
-ROOT_DIR = '/home'
+# ROOT_DIR = '/home'
 
 MPD_STATE_FILE_NAME = '{}/.mpd/state'.format(ROOT_DIR)
 DB_FILE_NAME = '{}/.mpd/database'.format(ROOT_DIR)

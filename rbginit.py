@@ -5,7 +5,7 @@ from lib import radio
 from time import sleep
 
 ROOT_DIR = '/Users/adamp'
-ROOT_DIR = '/home'
+# ROOT_DIR = '/home'
 
 PLAYLISTDIR = '{}/Music/MPD'.format(ROOT_DIR)
 MPD_STATE_FILE_NAME = '{}/.mpd/state'.format(ROOT_DIR)

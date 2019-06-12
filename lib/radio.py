@@ -5,7 +5,7 @@ from lib import ffprobe, system, cache
 DEBUG_PRINTS = False
 
 ROOT_DIR = '/Users/adamp'
-ROOT_DIR = '/home'
+# ROOT_DIR = '/home'
 
 PATH_TO_MUSIC_DB_FILES = '{}/Music/MPD/'.format(ROOT_DIR)
 PATH_TO_PLAYLIST_FILES = '{}/.mpd/playlists/'.format(ROOT_DIR)
@@ -205,7 +205,8 @@ def calculatePlaylistDurations(listName):
             result.append(row)
         except Exception as e:
             print 'Error in', fileUri,
-            print '------->', ''.join(e.msg)
+            print '------->'
+            print e
 
     return result
 
