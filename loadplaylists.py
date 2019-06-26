@@ -15,7 +15,7 @@ def get_playlists():
 
 # RELOAD ALL PLAYLISTS
 for playlist in get_playlists():
-    print 'Reloading', '||' + playlist + '||', 'shuffle on'
+    print('Reloading', '||' + playlist + '||', 'shuffle on')
     shuffle = True
     radio.loadPlaylistIntoMPC(playlist, True)
     radio.launchPlaylist(playlist)

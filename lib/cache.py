@@ -31,6 +31,6 @@ def clearCacheFile(listName):
     os.remove(cacheFileName(listName))
 
 def clearCache():
-    (dirpath, dirnames, filenames) = os.walk(CACHE_FILE_PATH).next()
+    (dirpath, dirnames, filenames) = next(os.walk(CACHE_FILE_PATH))
     for filename in filenames:
         clearCacheFile(filename)

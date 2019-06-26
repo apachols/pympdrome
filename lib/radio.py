@@ -50,8 +50,8 @@ def launchPlaylist(listName):
 # launches a playlist at the specified time
 def launchPlaylistAtTime(listName, currentSystemTimeMs):
     if (DEBUG_PRINTS):
-        print 'playing playlist named', listName
-        print 'playing at time', currentSystemTimeMs
+        print('playing playlist named', listName)
+        print('playing at time', currentSystemTimeMs)
 
     playlist = getPlaylist(listName)
     startPlaylistAtTime(listName, playlist, currentSystemTimeMs)
@@ -148,7 +148,7 @@ def getAliasedTimeForStartOfNextSong(listName, playlistData, currentSystemTimeMs
 
 def printPlaylistSeekSanityCheck(idx, songLength, seekTime, endOfSong):
     if (DEBUG_PRINTS):
-        print '('+str(idx)+')', 'songLength', songLength, 'seekTime', seekTime, 'endOfSong', endOfSong
+        print('('+str(idx)+')', 'songLength', songLength, 'seekTime', seekTime, 'endOfSong', endOfSong)
 
 def getSeekTimeString(seekTimeInMs):
     seekTimeRoundedSeconds = int(seekTimeInMs/1000)
@@ -180,13 +180,13 @@ def getPlaylist(listName):
         return resultList
 
     if (DEBUG_PRINTS):
-        print '========> Recalculating playlist durations using ffprobe, please wait...'
+        print('========> Recalculating playlist durations using ffprobe, please wait...')
     t1 = time.time()
     resultList = calculatePlaylistDurations(listName)
     cache.writeTo(listName, resultList)
     t2 = time.time()
     if (DEBUG_PRINTS):
-        print '========> Playlist recalculations complete (in', t2-t1, 'seconds)'
+        print('========> Playlist recalculations complete (in', t2-t1, 'seconds)')
 
     return resultList
 
@@ -204,9 +204,9 @@ def calculatePlaylistDurations(listName):
             row = (fileUri, duration)
             result.append(row)
         except Exception as e:
-            print 'Error in', fileUri,
-            print '------->'
-            print e
+            print('Error in', fileUri, end=' ')
+            print('------->')
+            print(e)
 
     return result
 
