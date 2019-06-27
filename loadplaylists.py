@@ -4,8 +4,7 @@ from lib import system
 from lib import radio
 from time import sleep
 
-ROOT_DIR = '/Users/adamp'
-ROOT_DIR = '/home'
+ROOT_DIR = '/home/pi'
 
 PLAYLISTDIR = '{}/Music/MPD'.format(ROOT_DIR)
 

@@ -1,13 +1,15 @@
+
 import subprocess, time
 
 from lib import ffprobe, system, cache
 
 DEBUG_PRINTS = False
 
-ROOT_DIR = '/Users/adamp'
 # ROOT_DIR = '/home'
+ROOT_DIR = '/home/pi'
 
-PATH_TO_MUSIC_DB_FILES = '{}/Music/MPD/'.format(ROOT_DIR)
+
+PATH_TO_MUSIC_DB_FILES = '{}/Music/'.format(ROOT_DIR)
 PATH_TO_PLAYLIST_FILES = '{}/.mpd/playlists/'.format(ROOT_DIR)
 
 #
@@ -206,7 +208,9 @@ def calculatePlaylistDurations(listName):
         except Exception as e:
             print('Error in', fileUri, end=' ')
             print('------->')
-            print(e)
+            import traceback, sys
+            traceback.print_exc(file=sys.stdout) 
+            raise
 
     return result
 
