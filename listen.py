@@ -23,7 +23,7 @@ radio_station_list = {
     12: 'doduk',
     13: 'mid-air_thief',
     14: 'doduk',
-    15: 'mid-air_thief',
+    15: '!STOP!',
 }
 
 def process_line(line: str):
@@ -38,9 +38,13 @@ def process_line(line: str):
 
 def handle_selection(selection: str):
     station_index = int(selection)
-    selected_station = radio_station_list[station_index]
-    print('', selected_station)
-    radio.launchPlaylist(selected_station)
+    if station_index == 15:
+        print('Stop')
+        radio.stopPlayback()
+    else:
+        selected_station = radio_station_list[station_index]
+        print('', selected_station)
+        radio.launchPlaylist(selected_station)
 
 async def get_values(aioserial_instance: aioserial.AioSerial):
     while True:
