@@ -15,7 +15,7 @@ def getFileDurationUsingFFProbe(fileUri):
 
 # parse multiline ffprobe output, return song duration in milliseconds
 def durationFromFFProbeResult(ffprobeResult):
-    ffprobeOutputLines = ffprobeResult.split('\n')
+    ffprobeOutputLines = ffprobeResult.decode().split('\n')
     for aLine in ffprobeOutputLines:
         aLineStripped = aLine.strip()
         if aLineStripped.startswith('Duration'):

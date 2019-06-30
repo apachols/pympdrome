@@ -33,18 +33,18 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv,"hrnls:p:t:",["playlist=","playlist=","time="])
     except getopt.GetoptError:
-        print help
+        print(help)
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print help
+            print(help)
             sys.exit()
         elif opt in ("-n"): #, "--next"):
-            print 'Next!'
+            print('Next!')
             radio.skipToNextSong()
             exit()
         elif opt in ("-r"): #, "--reset"):
-            print 'SYSTEM RESET'
+            print('SYSTEM RESET')
             system.restartMpd(killall_mpd=True)
             system.reset()
             exit()
@@ -60,14 +60,14 @@ def main(argv):
 
     # Check input; playlist name is not optional for the below commands
     if (playlist == ''):
-        print '========ATTENTION PLEASE=========='
-        print 'Input Error: no playlist specified'
-        print '=================================='
-        print help
+        print('========ATTENTION PLEASE==========')
+        print('Input Error: no playlist specified')
+        print('==================================')
+        print(help)
         exit(1)
 
     if (load):
-        print 'Reloading', playlist, 'shuffle on'
+        print(('Reloading', playlist, 'shuffle on'))
         shuffle = True
         radio.loadPlaylistIntoMPC(playlist, True)
         radio.launchPlaylist(playlist)
@@ -76,15 +76,15 @@ def main(argv):
 
     # Run the correct command for the options we selected
     if (smart):
-        print 'Smart.'
+        print('Smart.')
         radio.smartHandleButtonPress(playlist)
 
     elif (time == ''):
-        print 'Launch', playlist
+        print(('Launch', playlist))
         radio.launchPlaylist(playlist)
 
     else:
-        print 'Launch', playlist, 'at', time
+        print(('Launch', playlist, 'at', time))
         radio.launchPlaylistAtNewSystemTime(playlist, time)
 
 #

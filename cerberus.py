@@ -93,11 +93,11 @@ while True:
     out = ''
     for line in pa_ctrl_changes(["pactl", "subscribe"]):
         out += line
-    print out
+    print(out)
     sleep(0.125)
 
     try:
         fix_sink_routing()
     except Exception as exc:
-        print "EXCEPTION"
-        print exc
+        print("EXCEPTION")
+        print(exc)

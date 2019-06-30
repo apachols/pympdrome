@@ -31,7 +31,7 @@ def get_playlists():
             x for x in playlists
             if 'step' in x or 'dance' in x or 'groove' in x or 'medium' in x
         ]
-    print silent_disco
+    print(silent_disco)
     return playlists
 
 @app.route("/")

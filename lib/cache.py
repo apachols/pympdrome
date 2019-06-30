@@ -1,7 +1,6 @@
 import pickle, os
 
-ROOT_DIR = '/Users/adamp'
-# ROOT_DIR = '/home'
+ROOT_DIR = '/home/pi'
 
 CACHE_FILE_PATH = '{}/.mpd/hypnocache/'.format(ROOT_DIR)
 
@@ -31,6 +30,6 @@ def clearCacheFile(listName):
     os.remove(cacheFileName(listName))
 
 def clearCache():
-    (dirpath, dirnames, filenames) = os.walk(CACHE_FILE_PATH).next()
+    (dirpath, dirnames, filenames) = next(os.walk(CACHE_FILE_PATH))
     for filename in filenames:
         clearCacheFile(filename)
