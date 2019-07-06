@@ -8,22 +8,28 @@ import serial.tools.list_ports
 print([comport.device for comport in serial.tools.list_ports.comports()])
 
 radio_station_list = {
-    0: 'doduk',
-    1: 'mid-air_thief',
-    2: 'doduk',
-    3: 'mid-air_thief',
-    4: 'doduk',
-    5: 'mid-air_thief',
-    6: 'doduk',
-    7: 'mid-air_thief',
-    8: 'doduk',
-    9: 'mid-air_thief',
-    10: 'doduk',
-    11: 'mid-air_thief',
-    12: 'doduk',
-    13: 'mid-air_thief',
-    14: 'doduk',
+    # left side - definitely workin
+    0: '!STOP!',
+    4: '!STOP!',
+    8: '!STOP!',
+    # bottom row - not sure if these will really work
+    12: '!STOP!',
+    13: '!STOP!',
+    14: '!STOP!',
     15: '!STOP!',
+    # real playlists
+    1: 'rosie',
+    2: 'fleshworldus',
+    3: 'the_vaccine_underground',
+    5: 'superstarvjs',
+    6: 'cadaverous_mastication',
+    7: 'darker3',
+    9: 'mellowsexy',
+    10: 'dubbysteps3', #TODO
+    11: 'adambient', #TODO 
+    # marten's electronic explorations playlist?
+    # anything from aury?
+    # one more
 }
 
 def process_line(line: str):
