@@ -7,6 +7,9 @@ from lib import radio
 import serial.tools.list_ports
 print([comport.device for comport in serial.tools.list_ports.comports()])
 
+# current station
+dial = -1
+
 radio_station_list = {
     # left side - definitely workin
     0: '!STOP!',
@@ -43,17 +46,18 @@ def process_line(line: str):
         print(exc)
 
 def handle_selection(selection: str):
+    global dial
     station_index = int(selection)
-    if station_index
-    if station_index in radio_station_list and radio_station_list[station_index] == '!STOP!'
+    if station_index in radio_station_list and radio_station_list[station_index] == '!STOP!':
         print('Stop')
         radio.stopPlayback()
-    elif selected_station == radio_station_list[station_index]:
+    elif station_index == dial:
         radio.skipToNextSong();
     else:
         selected_station = radio_station_list[station_index]
         print('', selected_station)
         radio.launchPlaylist(selected_station)
+        dial = station_index
 
 async def get_values(aioserial_instance: aioserial.AioSerial):
     while True:
