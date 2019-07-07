@@ -113,6 +113,9 @@ cp ~/Music/MP3/FleetFoxes/FleetFoxes ~/Music/MPD/folder02
 ```
 Each folder created here is essentially a playlist.
 
+⚠ NOTE ⚠
+**You should run `mpc update` after adding new playlist files, so that mpd can find them.  Otherwise mpd can become out of sync with the filesystem and new directories will not show via `mpc ls` or `mpc listall`**
+
 Add each playlist to MPC:
 ```
 mpc add folder01
