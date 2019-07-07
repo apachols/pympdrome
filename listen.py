@@ -52,6 +52,6 @@ async def get_values(aioserial_instance: aioserial.AioSerial):
         process_line(text)
 
 def run():
-    asyncio.run(get_values(aioserial.AioSerial(baudrate=115200, port='/dev/cu.usbmodem14201')))
+    asyncio.run(get_values(aioserial.AioSerial(baudrate=115200, port='/dev/ttyACM0')))
 
 run()
