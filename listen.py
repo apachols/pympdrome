@@ -44,9 +44,12 @@ def process_line(line: str):
 
 def handle_selection(selection: str):
     station_index = int(selection)
-    if station_index == 15:
+    if station_index
+    if station_index in radio_station_list and radio_station_list[station_index] == '!STOP!'
         print('Stop')
         radio.stopPlayback()
+    elif selected_station == radio_station_list[station_index]:
+        radio.skipToNextSong();
     else:
         selected_station = radio_station_list[station_index]
         print('', selected_station)
