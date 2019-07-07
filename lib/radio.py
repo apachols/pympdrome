@@ -67,7 +67,7 @@ def launchPlaylistAtNewSystemTime(listName, newSystemTimeMs):
 
 def loadPlaylistIntoMPC(listName, shuffle):
     # well well well, finally actually checking_output, are we?
-    mpcPlaylists = subprocess.check_output(['mpc', 'lsplaylist'])
+    mpcPlaylists = subprocess.check_output(['mpc', 'lsplaylist']).decode()
     if (listName in mpcPlaylists):
         subprocess.check_output(['mpc', 'rm', listName])
     subprocess.check_output(['mpc', 'clear'])
